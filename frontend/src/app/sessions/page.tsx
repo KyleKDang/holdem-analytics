@@ -61,38 +61,38 @@ export default function SessionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6 bg-green-900 flex items-center justify-center">
-        <p className="text-white text-xl">Loading sessions...</p>
+      <div className="min-h-screen p-3 sm:p-6 bg-green-900 flex items-center justify-center">
+        <p className="text-white text-lg sm:text-xl">Loading sessions...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-6 bg-green-900">
+    <div className="min-h-screen p-3 sm:p-6 bg-green-900">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-6 flex gap-3">
+        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
           <input
             type="text"
             placeholder="Session name..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="flex-1 p-3 rounded-lg bg-gray-700/80 text-white focus:ring-2 focus:ring-yellow-400"
+            className="flex-1 p-2.5 sm:p-3 rounded-lg bg-gray-700/80 text-white text-sm sm:text-base focus:ring-2 focus:ring-yellow-400"
           />
           <button
             onClick={createSession}
-            className="px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded-lg hover:brightness-110 flex items-center gap-2"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95"
           >
-            <Plus className="w-5 h-5 cursor-pointer" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Create Session
           </button>
         </div>
 
         {sessions.length === 0 ? (
-          <p className="text-gray-400 text-center py-8">
+          <p className="text-gray-400 text-center py-8 text-sm sm:text-base">
             No sessions yet. Create one to start logging hands!
           </p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {sessions.map((session) => (
               <SessionItem
                 key={session.id}
