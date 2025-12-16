@@ -170,8 +170,40 @@ export default function HomePage() {
       <div className="flex items-start min-h-[calc(100vh-73px)] p-3 sm:p-6 bg-green-900">
         {/* Responsive Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-7xl mx-auto">
-          {/* Droppable Areas - Full width on mobile, left column on desktop */}
-          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-1 flex flex-col">
+          {/* Results Panel - First on mobile, right column on desktop */}
+          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-1 lg:order-2 flex flex-col">
+            <ResultsPanel
+              handRank={handRank}
+              odds={odds}
+              isCalculating={isCalculating}
+            />
+
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
+              <button
+                onClick={evaluateHand}
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
+              >
+                Evaluate Hand
+              </button>
+              <button
+                onClick={calculateOdds}
+                disabled={isCalculating}
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+              >
+                {isCalculating ? "Calculating..." : "Calculate Odds"}
+              </button>
+              <button
+                onClick={handleLogHand}
+                disabled={holeCards.length !== 2 || boardCards.length < 3}
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
+              >
+                Log Hand
+              </button>
+            </div>
+          </div>
+
+          {/* Droppable Areas - Second on mobile, left column on desktop */}
+          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-2 lg:order-1 flex flex-col">
             <div className="mb-4">
               <label
                 htmlFor="num-opponents"
@@ -204,39 +236,7 @@ export default function HomePage() {
             <DroppableArea id="board" cards={boardCards} />
           </div>
 
-          {/* Results Panel - Full width on mobile, right column on desktop */}
-          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-2 flex flex-col">
-            <ResultsPanel
-              handRank={handRank}
-              odds={odds}
-              isCalculating={isCalculating}
-            />
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
-              <button
-                onClick={evaluateHand}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
-              >
-                Evaluate Hand
-              </button>
-              <button
-                onClick={calculateOdds}
-                disabled={isCalculating}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
-              >
-                {isCalculating ? "Calculating..." : "Calculate Odds"}
-              </button>
-              <button
-                onClick={handleLogHand}
-                disabled={holeCards.length !== 2 || boardCards.length < 3}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
-              >
-                Log Hand
-              </button>
-            </div>
-          </div>
-
-          {/* Deck - Full width at bottom */}
+          {/* Deck - Full width at bottom on all screen sizes */}
           <div className="lg:col-span-2 p-3 sm:p-4 rounded-lg bg-green-800/40 order-3">
             <h2 className="mb-2 text-white font-semibold text-sm sm:text-base">
               Deck
