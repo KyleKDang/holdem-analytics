@@ -21,14 +21,16 @@ export default function ResultsPanel({
   isCalculating,
 }: ResultsPanelProps) {
   return (
-    <div className="flex flex-col items-center mt-2 p-6 border-2 border-yellow-400 rounded-2xl bg-gray-800/90 shadow-xl">
-      <h2 className="text-2xl font-bold text-yellow-400 mb-4 text-center">
-        Results
-      </h2>
+    <div className="flex flex-col items-center justify-around flex-1 p-4 sm:p-6 border-2 border-yellow-400 rounded-2xl bg-gray-800/90 shadow-xl">
+      <div className="w-full">
+        <h2 className="text-xl sm:text-2xl font-bold text-yellow-400 mb-4 text-center">
+          Results
+        </h2>
 
-      <HandRankDisplay handRank={handRank} />
+        <HandRankDisplay handRank={handRank} />
+      </div>
 
-      <div className="flex flex-1 w-full">
+      <div className="w-full">
         <OddsDisplay odds={odds} isCalculating={isCalculating} />
       </div>
     </div>

@@ -6,6 +6,10 @@ import {
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 
@@ -38,6 +42,21 @@ export default function HomePage() {
   const [showLogger, setShowLogger] = useState(false);
   const [showAuthMessage, setShowAuthMessage] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+
+  // Configure sensors for both mouse and touch (mobile)
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 8,
+      },
+    }),
+  );
 
   useEffect(() => {
     setDeck(suits.flatMap((s) => ranks.map((r) => r + s)));
@@ -143,19 +162,25 @@ export default function HomePage() {
   };
 
   return (
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="flex items-center h-[calc(100vh-73px)] p-6 bg-green-900">
-        {/* Grid Layout */}
-        <div className="grid grid-cols-2 grid-rows-[1fr_auto] gap-6 h-[80vh]">
-          {/* Top Left: Droppable Areas */}
-          <div className="p-4 rounded-lg bg-green-800/40">
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex items-start min-h-[calc(100vh-73px)] p-3 sm:p-6 bg-green-900">
+        {/* Responsive Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-7xl mx-auto">
+          {/* Droppable Areas - Full width on mobile, left column on desktop */}
+          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-1 flex flex-col">
             <div className="mb-4">
               <label
                 htmlFor="num-opponents"
-                className="block text-white font-semibold mb-2"
+                className="block text-white font-semibold mb-2 text-sm sm:text-base"
               >
                 Number of Opponents:{" "}
-                <span className="text-yellow-400 text-xl">{numOpponents}</span>
+                <span className="text-yellow-400 text-lg sm:text-xl">
+                  {numOpponents}
+                </span>
               </label>
               <input
                 id="num-opponents"
@@ -168,55 +193,61 @@ export default function HomePage() {
               />
             </div>
 
-            <h2 className="mb-2 text-white font-semibold">Hole Cards</h2>
+            <h2 className="mb-2 text-white font-semibold text-sm sm:text-base">
+              Hole Cards
+            </h2>
             <DroppableArea id="hole" cards={holeCards} />
 
-            <h2 className="mb-2 text-white font-semibold">Board Cards</h2>
+            <h2 className="mb-2 mt-4 text-white font-semibold text-sm sm:text-base">
+              Board Cards
+            </h2>
             <DroppableArea id="board" cards={boardCards} />
           </div>
 
-          {/* Top Right: Results Panel */}
-          <div className="grid grid-rows-[1fr_auto] h-full p-4 rounded-lg bg-green-800/40">
+          {/* Results Panel - Full width on mobile, right column on desktop */}
+          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-2 flex flex-col">
             <ResultsPanel
               handRank={handRank}
               odds={odds}
               isCalculating={isCalculating}
             />
 
-            <div className="flex gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
               <button
                 onClick={evaluateHand}
-                className="flex-1 px-4 py-2 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02]"
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
               >
                 Evaluate Hand
               </button>
               <button
                 onClick={calculateOdds}
                 disabled={isCalculating}
-                className="flex-1 px-4 py-2 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02]"
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
               >
                 {isCalculating ? "Calculating..." : "Calculate Odds"}
               </button>
               <button
                 onClick={handleLogHand}
                 disabled={holeCards.length !== 2 || boardCards.length < 3}
-                className="flex-1 px-4 py-2 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold rounded-lg hover:from-yellow-200 hover:to-yellow-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02]"
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
               >
                 Log Hand
               </button>
             </div>
           </div>
 
-          {/* Bottom: Deck */}
-          <div className="col-span-2 p-4 rounded-lg bg-green-800/40">
-            <h2 className="mb-2 text-white font-semibold">Deck</h2>
+          {/* Deck - Full width at bottom */}
+          <div className="lg:col-span-2 p-3 sm:p-4 rounded-lg bg-green-800/40 order-3">
+            <h2 className="mb-2 text-white font-semibold text-sm sm:text-base">
+              Deck
+            </h2>
             <Deck deck={deck} />
           </div>
         </div>
       </div>
 
       {showAuthMessage && (
-        <div className="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+        <div className="fixed bottom-4 right-4 bg-red-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg z-50 text-sm sm:text-base">
           Please log in to save hands
         </div>
       )}

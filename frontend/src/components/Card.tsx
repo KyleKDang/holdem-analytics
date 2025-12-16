@@ -18,21 +18,29 @@ export default function Card({ code, size = 60, id }: CardProps) {
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
       : "translate3d(0,0,0)",
     opacity: isDragging ? 0.5 : 1,
+    touchAction: "none", // Prevent scrolling while dragging on mobile
   };
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-      className="inline-flex items-center justify-center p-1 bg-white rounded shadow cursor-grab"
+      className="inline-flex items-center justify-center p-1 bg-white rounded shadow cursor-grab active:cursor-grabbing touch-none"
     >
       <Image
         src={`/cards/${code}.png`}
         alt={code}
         width={200}
         height={300}
-        style={{ width: `${size}px`, height: "auto" }}
+        style={{
+          width: `${size}px`,
+          height: "auto",
+          maxHeight: `${size * 1.5}px`,
+        }}
+        className="pointer-events-none select-none object-contain"
+        draggable={false}
       />
     </div>
   );
