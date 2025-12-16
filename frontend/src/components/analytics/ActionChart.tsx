@@ -31,7 +31,7 @@ const COLORS = {
 export default function ActionChart({ data }: ActionChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-400">
+      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-400 text-sm sm:text-base">
         No data available
       </div>
     );
@@ -43,16 +43,22 @@ export default function ActionChart({ data }: ActionChartProps) {
     count: item.total_hands,
   }));
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
       <PieChart>
         <Pie
           data={chartData}
           cx="50%"
           cy="50%"
           labelLine={false}
-          label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
-          outerRadius={80}
+          label={
+            isMobile
+              ? false
+              : ({ name, value }) => `${name}: ${value.toFixed(1)}%`
+          }
+          outerRadius={isMobile ? 60 : 80}
           fill="#8884d8"
           dataKey="value"
         >
@@ -71,6 +77,7 @@ export default function ActionChart({ data }: ActionChartProps) {
             border: "1px solid #374151",
             borderRadius: "8px",
             color: "#F3F4F6",
+            fontSize: isMobile ? "12px" : "14px",
           }}
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
@@ -92,7 +99,13 @@ export default function ActionChart({ data }: ActionChartProps) {
             return null;
           }}
         />
-        <Legend wrapperStyle={{ color: "#F3F4F6" }} iconType="circle" />
+        <Legend
+          wrapperStyle={{
+            color: "#F3F4F6",
+            fontSize: isMobile ? "12px" : "14px",
+          }}
+          iconType="circle"
+        />
       </PieChart>
     </ResponsiveContainer>
   );

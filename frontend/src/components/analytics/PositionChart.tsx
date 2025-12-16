@@ -31,30 +31,36 @@ const COLORS = {
 export default function PositionChart({ data }: PositionChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-400">
+      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-400 text-sm sm:text-base">
         No data available
       </div>
     );
   }
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer
+      width="100%"
+      height={window.innerWidth < 640 ? 250 : 300}
+    >
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
         <XAxis
           dataKey="position"
           stroke="#9CA3AF"
+          tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
           tickFormatter={(value) =>
             value.charAt(0).toUpperCase() + value.slice(1)
           }
         />
         <YAxis
           stroke="#9CA3AF"
+          tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
           label={{
             value: "Win Rate (%)",
             angle: -90,
             position: "insideLeft",
             fill: "#9CA3AF",
+            fontSize: window.innerWidth < 640 ? 10 : 12,
           }}
           domain={[0, 100]}
         />
@@ -64,6 +70,7 @@ export default function PositionChart({ data }: PositionChartProps) {
             border: "1px solid #374151",
             borderRadius: "8px",
             color: "#F3F4F6",
+            fontSize: window.innerWidth < 640 ? "12px" : "14px",
           }}
           formatter={(value: number) => [`${value.toFixed(2)}%`, "Win Rate"]}
           labelFormatter={(label) =>

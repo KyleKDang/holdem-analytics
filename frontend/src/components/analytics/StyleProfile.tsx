@@ -14,23 +14,23 @@ interface StyleProfileProps {
 
 export default function StyleProfile({ style }: StyleProfileProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       {/* Style Rating */}
-      <div className="bg-gray-800/50 p-6 rounded-lg border-2 border-yellow-400">
-        <h3 className="text-xl font-bold text-yellow-400 mb-4">
+      <div className="bg-gray-800/50 p-4 sm:p-6 rounded-lg border-2 border-yellow-400">
+        <h3 className="text-lg sm:text-xl font-bold text-yellow-400 mb-3 sm:mb-4">
           Your Playing Style
         </h3>
-        <p className="text-3xl font-bold text-white mb-2">
+        <p className="text-2xl sm:text-3xl font-bold text-white mb-2">
           {style.style_rating}
         </p>
-        <div className="space-y-2 mt-4">
-          <div className="flex justify-between text-sm">
+        <div className="space-y-2 mt-3 sm:mt-4">
+          <div className="flex justify-between text-xs sm:text-sm">
             <span className="text-gray-400">Tight/Loose:</span>
             <span className="text-white font-semibold">
               {style.tight_loose}
             </span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-xs sm:text-sm">
             <span className="text-gray-400">Passive/Aggressive:</span>
             <span className="text-white font-semibold">
               {style.passive_aggressive}
@@ -40,11 +40,11 @@ export default function StyleProfile({ style }: StyleProfileProps) {
       </div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {/* VPIP */}
-        <div className="bg-gray-800/50 p-4 rounded-lg">
-          <p className="text-gray-400 text-sm mb-1">VPIP</p>
-          <p className="text-2xl font-bold text-white">
+        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
+          <p className="text-gray-400 text-xs sm:text-sm mb-1">VPIP</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">
             {style.vpip.toFixed(1)}%
           </p>
           <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
@@ -56,9 +56,9 @@ export default function StyleProfile({ style }: StyleProfileProps) {
         </div>
 
         {/* Aggression */}
-        <div className="bg-gray-800/50 p-4 rounded-lg">
-          <p className="text-gray-400 text-sm mb-1">Aggression</p>
-          <p className="text-2xl font-bold text-white">
+        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
+          <p className="text-gray-400 text-xs sm:text-sm mb-1">Aggression</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">
             {style.aggression_factor.toFixed(2)}
           </p>
           <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
@@ -72,9 +72,9 @@ export default function StyleProfile({ style }: StyleProfileProps) {
         </div>
 
         {/* Fold Frequency */}
-        <div className="bg-gray-800/50 p-4 rounded-lg">
-          <p className="text-gray-400 text-sm mb-1">Fold %</p>
-          <p className="text-2xl font-bold text-white">
+        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
+          <p className="text-gray-400 text-xs sm:text-sm mb-1">Fold %</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">
             {style.fold_frequency.toFixed(1)}%
           </p>
           <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
@@ -86,9 +86,9 @@ export default function StyleProfile({ style }: StyleProfileProps) {
         </div>
 
         {/* Raise Frequency */}
-        <div className="bg-gray-800/50 p-4 rounded-lg">
-          <p className="text-gray-400 text-sm mb-1">Raise %</p>
-          <p className="text-2xl font-bold text-white">
+        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
+          <p className="text-gray-400 text-xs sm:text-sm mb-1">Raise %</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">
             {style.raise_frequency.toFixed(1)}%
           </p>
           <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
