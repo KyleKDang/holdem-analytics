@@ -44,19 +44,22 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center h-[calc(100vh-73px)] bg-gradient-to-b from-gray-900 via-green-950 to-gray-900">
+    <div className="flex items-center justify-center min-h-[calc(100vh-73px)] p-4 sm:p-6 bg-gradient-to-b from-gray-900 via-green-950 to-gray-900">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800/90 backdrop-blur-lg shadow-2xl rounded-2xl p-10 w-full max-w-sm border-2 border-yellow-400"
+        className="bg-gray-800/90 backdrop-blur-lg shadow-2xl rounded-2xl p-6 sm:p-10 w-full max-w-sm border-2 border-yellow-400"
       >
         {error && (
-          <div className="bg-red-700 text-white p-3 rounded mb-4 text-center font-semibold shadow-md">
+          <div className="bg-red-700 text-white p-2.5 sm:p-3 rounded mb-4 text-center font-semibold shadow-md text-sm sm:text-base">
             {error}
           </div>
         )}
 
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-semibold mb-2">
+          <label
+            htmlFor="email"
+            className="block text-xs sm:text-sm font-semibold mb-2 text-white"
+          >
             Email
           </label>
           <input
@@ -66,7 +69,7 @@ export default function RegisterPage() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             autoFocus
-            className="w-full bg-gray-700/80 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            className="w-full bg-gray-700/80 text-white p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             required
           />
         </div>
@@ -74,7 +77,7 @@ export default function RegisterPage() {
         <div className="mb-4">
           <label
             htmlFor="username"
-            className="block text-sm font-semibold mb-2"
+            className="block text-xs sm:text-sm font-semibold mb-2 text-white"
           >
             Username
           </label>
@@ -84,7 +87,7 @@ export default function RegisterPage() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your username"
-            className="w-full bg-gray-700/80 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            className="w-full bg-gray-700/80 text-white p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             required
           />
         </div>
@@ -92,7 +95,7 @@ export default function RegisterPage() {
         <div className="mb-4">
           <label
             htmlFor="password"
-            className="block text-sm font-semibold mb-2"
+            className="block text-xs sm:text-sm font-semibold mb-2 text-white"
           >
             Password
           </label>
@@ -102,7 +105,7 @@ export default function RegisterPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
-            className="w-full bg-gray-700/80 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            className="w-full bg-gray-700/80 text-white p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             required
           />
         </div>
@@ -110,7 +113,7 @@ export default function RegisterPage() {
         <div className="mb-6">
           <label
             htmlFor="confirmPassword"
-            className="block text-sm font-semibold mb-2"
+            className="block text-xs sm:text-sm font-semibold mb-2 text-white"
           >
             Confirm Password
           </label>
@@ -120,7 +123,7 @@ export default function RegisterPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your password"
-            className="w-full bg-gray-700/80 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            className="w-full bg-gray-700/80 text-white p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             required
           />
         </div>
@@ -128,7 +131,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-3 rounded-xl bg-yellow-400 text-gray-900 font-bold text-lg hover:scale-105 hover:brightness-110 transition-transform duration-200 ${
+          className={`w-full py-2.5 sm:py-3 rounded-xl bg-yellow-400 text-gray-900 font-bold text-base sm:text-lg hover:scale-105 hover:brightness-110 transition-transform duration-200 active:scale-95 ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
