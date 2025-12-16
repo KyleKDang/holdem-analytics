@@ -170,8 +170,8 @@ export default function HomePage() {
       <div className="flex items-start min-h-[calc(100vh-73px)] p-3 sm:p-6 bg-green-900">
         {/* Responsive Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-7xl mx-auto">
-          {/* Results Panel - First on mobile, right column on desktop */}
-          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-1 lg:order-2 flex flex-col">
+          {/* Results Panel - Last on mobile, right column on desktop */}
+          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-3 lg:order-2 flex flex-col">
             <ResultsPanel
               handRank={handRank}
               odds={odds}
@@ -202,8 +202,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Droppable Areas - Second on mobile, left column on desktop */}
-          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-2 lg:order-1 flex flex-col">
+          {/* Droppable Areas - First on mobile, left column on desktop */}
+          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-1 lg:order-1 flex flex-col">
             <div className="mb-4">
               <label
                 htmlFor="num-opponents"
@@ -236,8 +236,8 @@ export default function HomePage() {
             <DroppableArea id="board" cards={boardCards} />
           </div>
 
-          {/* Deck - Full width at bottom on all screen sizes */}
-          <div className="lg:col-span-2 p-3 sm:p-4 rounded-lg bg-green-800/40 order-3">
+          {/* Deck - Second on mobile (right below droppables), full width at bottom on desktop */}
+          <div className="lg:col-span-2 p-3 sm:p-4 rounded-lg bg-green-800/40 order-2 lg:order-3">
             <h2 className="mb-2 text-white font-semibold text-sm sm:text-base">
               Deck
             </h2>
