@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+import httpx
+import os
 
 from app.api.schemas.hand import (
     HandEvaluationRequest,
@@ -6,35 +8,47 @@ from app.api.schemas.hand import (
     HandOddsRequest,
     HandOddsResponse,
 )
-from app.core.evaluator.evaluator import evaluate_hand as evaluate_hand_core
-from app.core.odds.odds_calculator import calculate_odds as calculate_odds_core
-from app.core.models.card import Card
-
 
 router = APIRouter(prefix="/tools", tags=["tools"])
 
-
-def _parse_cards(cards: list[str]) -> list[Card]:
-    """Convert a list of string representations into Card objects."""
-    return [Card(c) for c in cards]
+# Go service on localhost (same EC2 instance)
+GO_SERVICE_URL = os.getenv("GO_SERVICE_URL", "http://localhost:8001")
 
 
 @router.post("/evaluate", response_model=HandEvaluationResponse)
 async def evaluate_hand(request: HandEvaluationRequest):
-    """
-    Evaluate the best 5-card poker hand from the player's hole cards and board cards.
-    """
-    all_cards = _parse_cards(request.hole_cards) + _parse_cards(request.board_cards)
-    result = evaluate_hand_core(all_cards)
-    return HandEvaluationResponse(hand=result["label"], rank=result["rank"])
+    """Evaluate hand using Go microservice."""
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.post(
+                f"{GO_SERVICE_URL}/evaluate",
+                json={
+                    "hole_cards": request.hole_cards,
+                    "board_cards": request.board_cards,
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+            return HandEvaluationResponse(hand=data["hand"], rank=data["rank"])
+    except httpx.HTTPError as e:
+        raise HTTPException(status_code=503, detail=f"Go service error: {str(e)}")
 
 
 @router.post("/odds", response_model=HandOddsResponse)
 async def calculate_odds(request: HandOddsRequest):
-    """
-    Calculate winning odds for the given hole cards and board state.
-    """
-    hole_cards = _parse_cards(request.hole_cards)
-    board_cards = _parse_cards(request.board_cards)
-    odds = calculate_odds_core(hole_cards, board_cards, request.num_opponents)
-    return HandOddsResponse(win=odds["win"], tie=odds["tie"], loss=odds["loss"])
+    """Calculate odds using Go microservice."""
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(
+                f"{GO_SERVICE_URL}/odds",
+                json={
+                    "hole_cards": request.hole_cards,
+                    "board_cards": request.board_cards,
+                    "num_opponents": request.num_opponents,
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+            return HandOddsResponse(win=data["win"], tie=data["tie"], loss=data["loss"])
+    except httpx.HTTPError as e:
+        raise HTTPException(status_code=503, detail=f"Go service error: {str(e)}")
