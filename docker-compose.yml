@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:16
@@ -13,24 +15,37 @@ services:
     networks:
       - poker-net
 
+  go:
+    build:
+      context: ./go-service
+    container_name: poker-go
+    environment:
+      PORT: 8001
+    ports:
+      - "8001:8001"
+    networks:
+      - poker-net
+
   backend:
     build:
       context: ./backend
     container_name: poker-backend
-    command: poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
     volumes:
       - ./backend:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
     env_file:
       - ./backend/.env
+    depends_on:
+      - db
+      - go
     networks:
       - poker-net
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     container_name: poker-frontend
     ports:
       - "3000:3000"
@@ -46,3 +61,4 @@ volumes:
 
 networks:
   poker-net:
+    driver: bridge
