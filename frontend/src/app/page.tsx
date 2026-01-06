@@ -41,7 +41,9 @@ export default function HomePage() {
   const [activeCard, setActiveCard] = useState<string | null>(null);
   const [showLogger, setShowLogger] = useState(false);
   const [showAuthMessage, setShowAuthMessage] = useState(false);
+  const [showDisabledMessage, setShowDisabledMessage] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Configure sensors for both mouse and touch (mobile)
   const sensors = useSensors(
@@ -60,6 +62,7 @@ export default function HomePage() {
 
   useEffect(() => {
     setDeck(suits.flatMap((s) => ranks.map((r) => r + s)));
+    setIsLoggedIn(!!localStorage.getItem("token"));
   }, []);
 
   const sortDeck = (deck: string[]) => {
@@ -149,17 +152,32 @@ export default function HomePage() {
     }
   };
 
-  const handleLogHand = () => {
+  const handleLogHandClick = () => {
+    if (isLogHandDisabled) {
+      setShowDisabledMessage(true);
+      setTimeout(() => setShowDisabledMessage(false), 3000);
+      return;
+    }
+
     const token = localStorage.getItem("token");
     if (!token) {
-      if (!showAuthMessage) {
-        setShowAuthMessage(true);
-        setTimeout(() => setShowAuthMessage(false), 3000);
-      }
+      setShowAuthMessage(true);
+      setTimeout(() => setShowAuthMessage(false), 3000);
       return;
     }
     setShowLogger(true);
   };
+
+  const getLogHandTooltip = () => {
+    if (!isLoggedIn) return "Please log in to save hands";
+    if (holeCards.length !== 2) return "Need 2 hole cards";
+    if (boardCards.length < 3) return "Need at least 3 board cards";
+    return "";
+  };
+
+  const isLogHandDisabled =
+    !isLoggedIn || holeCards.length !== 2 || boardCards.length < 3;
+  const tooltipMessage = getLogHandTooltip();
 
   return (
     <DndContext
@@ -193,12 +211,16 @@ export default function HomePage() {
                 {isCalculating ? "Calculating..." : "Calculate Odds"}
               </button>
               <button
-                onClick={handleLogHand}
-                disabled={holeCards.length !== 2 || boardCards.length < 3}
+                onClick={handleLogHandClick}
                 className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
               >
                 Log Hand
               </button>
+              {showDisabledMessage && (
+                <div className="fixed bottom-4 right-4 left-4 sm:left-auto bg-yellow-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg z-50 text-sm sm:text-base text-center sm:text-left">
+                  {tooltipMessage}
+                </div>
+              )}
             </div>
           </div>
 
