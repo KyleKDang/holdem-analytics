@@ -13,7 +13,11 @@ export default function Deck({ deck }: DeckProps) {
   return (
     <div
       ref={setNodeRef}
-      className="flex gap-1.5 sm:gap-2 max-h-[150px] sm:max-h-[200px] overflow-x-auto overflow-y-hidden p-2 sm:p-4 border rounded bg-gray-900 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+      className="flex gap-1.5 sm:gap-2 h-[200px] sm:h-auto overflow-x-auto overflow-y-hidden p-2 sm:p-4 border rounded bg-gray-900"
+      style={{
+        scrollbarWidth: 'auto',
+        scrollbarColor: '#9CA3AF #1F2937',
+      }}
     >
       {deck.map((c) => (
         <div key={c} className="flex-shrink-0">
