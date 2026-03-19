@@ -188,7 +188,7 @@ export default function HomePage() {
                 </button>
                 <button
                   onClick={handleLogHandClick}
-                  className="px-3 py-2.5 rounded-lg bg-[#d4af37] text-[#0c0f14] text-sm font-semibold hover:bg-[#e8c547] transition-all duration-150 shadow-[0_0_20px_rgba(212,175,55,0.15)]"
+                  className="px-3 py-2.5 rounded-lg bg-[#0e1117] border border-[#1e2530] text-white text-sm font-medium hover:border-[#d4af37]/30 hover:text-[#d4af37] transition-all duration-150"
                 >
                   Log Hand
                 </button>
