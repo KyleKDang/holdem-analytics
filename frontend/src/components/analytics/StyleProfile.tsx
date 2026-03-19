@@ -12,92 +12,89 @@ interface StyleProfileProps {
   };
 }
 
+function MetricBar({
+  label,
+  value,
+  display,
+  color,
+  max = 100,
+}: {
+  label: string;
+  value: number;
+  display: string;
+  color: string;
+  max?: number;
+}) {
+  const pct = Math.min((value / max) * 100, 100);
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-slate-500">{label}</p>
+        <p className="text-sm font-semibold text-white tabular-nums">{display}</p>
+      </div>
+      <div className="h-1 bg-[#1e2530] rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${pct}%`, backgroundColor: color }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function StyleProfile({ style }: StyleProfileProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-      {/* Style Rating */}
-      <div className="bg-gray-800/50 p-4 sm:p-6 rounded-lg border-2 border-yellow-400">
-        <h3 className="text-lg sm:text-xl font-bold text-yellow-400 mb-3 sm:mb-4">
-          Your Playing Style
-        </h3>
-        <p className="text-2xl sm:text-3xl font-bold text-white mb-2">
-          {style.style_rating}
-        </p>
-        <div className="space-y-2 mt-3 sm:mt-4">
-          <div className="flex justify-between text-xs sm:text-sm">
-            <span className="text-gray-400">Tight/Loose:</span>
-            <span className="text-white font-semibold">
-              {style.tight_loose}
-            </span>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Style rating */}
+      <div className="rounded-xl bg-[#080a0d] border border-[#1e2530] p-5 flex flex-col justify-between">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-4">
+            Playing Style
+          </p>
+          <p className="text-3xl font-bold text-white mb-1">{style.style_rating}</p>
+        </div>
+        <div className="space-y-3 mt-4 pt-4 border-t border-[#1e2530]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-500">Tight / Loose</span>
+            <span className="text-xs font-semibold text-[#d4af37]">{style.tight_loose}</span>
           </div>
-          <div className="flex justify-between text-xs sm:text-sm">
-            <span className="text-gray-400">Passive/Aggressive:</span>
-            <span className="text-white font-semibold">
-              {style.passive_aggressive}
-            </span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-500">Passive / Aggressive</span>
+            <span className="text-xs font-semibold text-[#d4af37]">{style.passive_aggressive}</span>
           </div>
         </div>
       </div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        {/* VPIP */}
-        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
-          <p className="text-gray-400 text-xs sm:text-sm mb-1">VPIP</p>
-          <p className="text-xl sm:text-2xl font-bold text-white">
-            {style.vpip.toFixed(1)}%
-          </p>
-          <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-purple-500"
-              style={{ width: `${Math.min(style.vpip, 100)}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Aggression */}
-        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
-          <p className="text-gray-400 text-xs sm:text-sm mb-1">Aggression</p>
-          <p className="text-xl sm:text-2xl font-bold text-white">
-            {style.aggression_factor.toFixed(2)}
-          </p>
-          <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-orange-500"
-              style={{
-                width: `${Math.min(style.aggression_factor * 25, 100)}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Fold Frequency */}
-        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
-          <p className="text-gray-400 text-xs sm:text-sm mb-1">Fold %</p>
-          <p className="text-xl sm:text-2xl font-bold text-white">
-            {style.fold_frequency.toFixed(1)}%
-          </p>
-          <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-red-500"
-              style={{ width: `${Math.min(style.fold_frequency, 100)}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Raise Frequency */}
-        <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
-          <p className="text-gray-400 text-xs sm:text-sm mb-1">Raise %</p>
-          <p className="text-xl sm:text-2xl font-bold text-white">
-            {style.raise_frequency.toFixed(1)}%
-          </p>
-          <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-green-500"
-              style={{ width: `${Math.min(style.raise_frequency, 100)}%` }}
-            />
-          </div>
-        </div>
+      <div className="rounded-xl bg-[#080a0d] border border-[#1e2530] p-5 space-y-5">
+        <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold">
+          Metrics
+        </p>
+        <MetricBar
+          label="VPIP"
+          value={style.vpip}
+          display={`${style.vpip.toFixed(1)}%`}
+          color="#a78bfa"
+        />
+        <MetricBar
+          label="Aggression Factor"
+          value={style.aggression_factor}
+          display={style.aggression_factor.toFixed(2)}
+          color="#f59e0b"
+          max={4}
+        />
+        <MetricBar
+          label="Fold Frequency"
+          value={style.fold_frequency}
+          display={`${style.fold_frequency.toFixed(1)}%`}
+          color="#6b7280"
+        />
+        <MetricBar
+          label="Raise Frequency"
+          value={style.raise_frequency}
+          display={`${style.raise_frequency.toFixed(1)}%`}
+          color="#10b981"
+        />
       </div>
     </div>
   );

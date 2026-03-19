@@ -1,14 +1,8 @@
 "use client";
 
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, Cell,
 } from "recharts";
 
 interface PositionChartProps {
@@ -22,67 +16,57 @@ interface PositionChartProps {
   }>;
 }
 
-const COLORS = {
-  early: "#EF4444", // Red
-  middle: "#F59E0B", // Orange
-  late: "#10B981", // Green
+const COLORS: Record<string, string> = {
+  early:  "#a78bfa",
+  middle: "#d4af37",
+  late:   "#10b981",
 };
+
+function CustomTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  const entry = payload[0].payload;
+  return (
+    <div className="bg-[#0e1117] border border-[#2a3040] rounded-lg px-3 py-2 shadow-xl">
+      <p className="text-[10px] text-slate-500 mb-1 capitalize">{label} position</p>
+      <p className="text-sm font-semibold text-white">{payload[0].value.toFixed(1)}% win rate</p>
+      <p className="text-xs text-slate-500 mt-0.5">{entry.total_hands} hands</p>
+    </div>
+  );
+}
 
 export default function PositionChart({ data }: PositionChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-400 text-sm sm:text-base">
+      <div className="h-64 flex items-center justify-center text-slate-600 text-sm">
         No data available
       </div>
     );
   }
 
   return (
-    <ResponsiveContainer
-      width="100%"
-      height={window.innerWidth < 640 ? 250 : 300}
-    >
-      <BarChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+    <ResponsiveContainer width="100%" height={260}>
+      <BarChart data={data} margin={{ top: 4, right: 4, left: -10, bottom: 4 }} barSize={40}>
+        <CartesianGrid strokeDasharray="2 4" stroke="#1e2530" vertical={false} />
         <XAxis
           dataKey="position"
-          stroke="#9CA3AF"
-          tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
-          tickFormatter={(value) =>
-            value.charAt(0).toUpperCase() + value.slice(1)
-          }
+          stroke="#2a3040"
+          tick={{ fill: "#4b5563", fontSize: 11 }}
+          tickLine={false}
+          axisLine={{ stroke: "#1e2530" }}
+          tickFormatter={(v) => v.charAt(0).toUpperCase() + v.slice(1)}
         />
         <YAxis
-          stroke="#9CA3AF"
-          tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
-          label={{
-            value: "Win Rate (%)",
-            angle: -90,
-            position: "insideLeft",
-            fill: "#9CA3AF",
-            fontSize: window.innerWidth < 640 ? 10 : 12,
-          }}
+          stroke="#2a3040"
+          tick={{ fill: "#4b5563", fontSize: 11 }}
+          tickLine={false}
+          axisLine={false}
           domain={[0, 100]}
+          tickFormatter={(v) => `${v}%`}
         />
-        <Tooltip
-          contentStyle={{
-            backgroundColor: "#1F2937",
-            border: "1px solid #374151",
-            borderRadius: "8px",
-            color: "#F3F4F6",
-            fontSize: window.innerWidth < 640 ? "12px" : "14px",
-          }}
-          formatter={(value: number) => [`${value.toFixed(2)}%`, "Win Rate"]}
-          labelFormatter={(label) =>
-            `${label.charAt(0).toUpperCase() + label.slice(1)} Position`
-          }
-        />
-        <Bar dataKey="win_rate" radius={[8, 8, 0, 0]}>
-          {data.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={COLORS[entry.position as keyof typeof COLORS] || "#6B7280"}
-            />
+        <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.03)" }} />
+        <Bar dataKey="win_rate" radius={[6, 6, 0, 0]}>
+          {data.map((entry, i) => (
+            <Cell key={i} fill={COLORS[entry.position] ?? "#6b7280"} opacity={0.85} />
           ))}
         </Bar>
       </BarChart>

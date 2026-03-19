@@ -1,13 +1,8 @@
 "use client";
 
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, ReferenceLine,
 } from "recharts";
 
 interface WinRateChartProps {
@@ -20,73 +15,60 @@ interface WinRateChartProps {
   }>;
 }
 
+function CustomTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-[#0e1117] border border-[#2a3040] rounded-lg px-3 py-2 shadow-xl">
+      <p className="text-[10px] text-slate-500 mb-1">Hand #{label}</p>
+      <p className="text-sm font-semibold text-white">
+        {payload[0].value.toFixed(1)}% win rate
+      </p>
+    </div>
+  );
+}
+
 export default function WinRateChart({ data }: WinRateChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-400 text-sm sm:text-base">
+      <div className="h-64 flex items-center justify-center text-slate-600 text-sm">
         No data available
       </div>
     );
   }
 
-  // Sample data every N hands if too many points
   const sampledData =
     data.length > 100
-      ? data.filter(
-          (_, i) =>
-            i % Math.ceil(data.length / 100) === 0 || i === data.length - 1,
-        )
+      ? data.filter((_, i) => i % Math.ceil(data.length / 100) === 0 || i === data.length - 1)
       : data;
 
   return (
-    <ResponsiveContainer
-      width="100%"
-      height={window.innerWidth < 640 ? 250 : 300}
-    >
-      <LineChart data={sampledData}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+    <ResponsiveContainer width="100%" height={260}>
+      <LineChart data={sampledData} margin={{ top: 4, right: 4, left: -10, bottom: 4 }}>
+        <CartesianGrid strokeDasharray="2 4" stroke="#1e2530" vertical={false} />
         <XAxis
           dataKey="hand_number"
-          stroke="#9CA3AF"
-          tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
-          label={{
-            value: "Hands Played",
-            position: "insideBottom",
-            offset: -5,
-            fill: "#9CA3AF",
-            fontSize: window.innerWidth < 640 ? 10 : 12,
-          }}
+          stroke="#2a3040"
+          tick={{ fill: "#4b5563", fontSize: 11 }}
+          tickLine={false}
+          axisLine={{ stroke: "#1e2530" }}
         />
         <YAxis
-          stroke="#9CA3AF"
-          tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
-          label={{
-            value: "Win Rate (%)",
-            angle: -90,
-            position: "insideLeft",
-            fill: "#9CA3AF",
-            fontSize: window.innerWidth < 640 ? 10 : 12,
-          }}
+          stroke="#2a3040"
+          tick={{ fill: "#4b5563", fontSize: 11 }}
+          tickLine={false}
+          axisLine={false}
           domain={[0, 100]}
+          tickFormatter={(v) => `${v}%`}
         />
-        <Tooltip
-          contentStyle={{
-            backgroundColor: "#1F2937",
-            border: "1px solid #374151",
-            borderRadius: "8px",
-            color: "#F3F4F6",
-            fontSize: window.innerWidth < 640 ? "12px" : "14px",
-          }}
-          formatter={(value: number) => [`${value.toFixed(2)}%`, "Win Rate"]}
-          labelFormatter={(label) => `Hand #${label}`}
-        />
+        <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#2a3040", strokeWidth: 1 }} />
+        <ReferenceLine y={50} stroke="#2a3040" strokeDasharray="4 4" />
         <Line
           type="monotone"
           dataKey="win_rate"
-          stroke="#FCD34D"
-          strokeWidth={window.innerWidth < 640 ? 2 : 3}
+          stroke="#d4af37"
+          strokeWidth={2}
           dot={false}
-          activeDot={{ r: window.innerWidth < 640 ? 4 : 6, fill: "#FCD34D" }}
+          activeDot={{ r: 4, fill: "#d4af37", strokeWidth: 0 }}
         />
       </LineChart>
     </ResponsiveContainer>

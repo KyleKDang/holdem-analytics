@@ -15,76 +15,80 @@ interface StatsCardsProps {
   };
 }
 
+function StatCard({
+  label,
+  value,
+  sub,
+  icon: Icon,
+  accent,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  icon: React.ElementType;
+  accent: string;
+}) {
+  return (
+    <div className="relative rounded-xl bg-[#0e1117] border border-[#1e2530] p-5 overflow-hidden">
+      {/* Subtle accent glow in corner */}
+      <div
+        className="absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-10 blur-xl"
+        style={{ backgroundColor: accent }}
+      />
+      <div className="flex items-start justify-between mb-3">
+        <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold">
+          {label}
+        </p>
+        <div
+          className="w-7 h-7 rounded-md flex items-center justify-center"
+          style={{ backgroundColor: `${accent}18` }}
+        >
+          <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
+        </div>
+      </div>
+      <p className="text-3xl font-bold text-white tabular-nums mb-1">{value}</p>
+      <p className="text-xs text-slate-500">{sub}</p>
+    </div>
+  );
+}
+
 export default function StatsCards({ stats }: StatsCardsProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      {/* Win Rate Card */}
-      <div className="bg-gradient-to-br from-green-600 to-green-700 p-4 sm:p-6 rounded-lg shadow-lg">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-white font-semibold text-sm sm:text-base">
-            Win Rate
-          </h3>
-          <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-green-200" />
-        </div>
-        <p className="text-3xl sm:text-4xl font-bold text-white">
-          {stats.win_rate.toFixed(1)}%
-        </p>
-        <p className="text-green-200 text-xs sm:text-sm mt-2">
-          {stats.wins}W - {stats.losses}L - {stats.ties}T
-        </p>
-      </div>
-
-      {/* Total Hands Card */}
-      <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-4 sm:p-6 rounded-lg shadow-lg">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-white font-semibold text-sm sm:text-base">
-            Hands Played
-          </h3>
-          <Target className="w-5 h-5 sm:w-6 sm:h-6 text-blue-200" />
-        </div>
-        <p className="text-3xl sm:text-4xl font-bold text-white">
-          {stats.total_hands}
-        </p>
-        <p className="text-blue-200 text-xs sm:text-sm mt-2">
-          Across {stats.total_sessions} sessions
-        </p>
-      </div>
-
-      {/* VPIP Card */}
-      <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-4 sm:p-6 rounded-lg shadow-lg">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-white font-semibold text-sm sm:text-base">
-            VPIP
-          </h3>
-          <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-purple-200" />
-        </div>
-        <p className="text-3xl sm:text-4xl font-bold text-white">
-          {stats.vpip.toFixed(1)}%
-        </p>
-        <p className="text-purple-200 text-xs sm:text-sm mt-2">
-          {stats.vpip < 20 ? "Tight" : stats.vpip < 35 ? "Balanced" : "Loose"}
-        </p>
-      </div>
-
-      {/* Aggression Card */}
-      <div className="bg-gradient-to-br from-orange-600 to-orange-700 p-4 sm:p-6 rounded-lg shadow-lg">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-white font-semibold text-sm sm:text-base">
-            Aggression
-          </h3>
-          <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-orange-200" />
-        </div>
-        <p className="text-3xl sm:text-4xl font-bold text-white">
-          {stats.aggression_factor.toFixed(2)}
-        </p>
-        <p className="text-orange-200 text-xs sm:text-sm mt-2">
-          {stats.aggression_factor < 1
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <StatCard
+        label="Win Rate"
+        value={`${stats.win_rate.toFixed(1)}%`}
+        sub={`${stats.wins}W · ${stats.losses}L · ${stats.ties}T`}
+        icon={TrendingUp}
+        accent="#10b981"
+      />
+      <StatCard
+        label="Hands Played"
+        value={String(stats.total_hands)}
+        sub={`${stats.total_sessions} session${stats.total_sessions !== 1 ? "s" : ""}`}
+        icon={Target}
+        accent="#3b82f6"
+      />
+      <StatCard
+        label="VPIP"
+        value={`${stats.vpip.toFixed(1)}%`}
+        sub={stats.vpip < 20 ? "Tight" : stats.vpip < 35 ? "Balanced" : "Loose"}
+        icon={Activity}
+        accent="#a78bfa"
+      />
+      <StatCard
+        label="Aggression"
+        value={stats.aggression_factor.toFixed(2)}
+        sub={
+          stats.aggression_factor < 1
             ? "Passive"
             : stats.aggression_factor < 2
-              ? "Balanced"
-              : "Aggressive"}
-        </p>
-      </div>
+            ? "Balanced"
+            : "Aggressive"
+        }
+        icon={Zap}
+        accent="#f59e0b"
+      />
     </div>
   );
 }
