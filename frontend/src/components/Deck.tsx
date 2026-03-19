@@ -23,13 +23,13 @@ export default function Deck({ deck }: DeckProps) {
         style={{
           scrollbarWidth: "thin",
           scrollbarColor: "#2a2f3a #080a0d",
-          height: "110px",
+          height: "130px",
           alignItems: "center",
         }}
       >
         {deck.map((c) => (
           <div key={c} className="flex-shrink-0">
-            <Card code={c} id={c} size={46} />
+            <Card code={c} id={c} size={58} />
           </div>
         ))}
       </div>
