@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import api from "@/services/api";
 
 export default function LoginPage() {
@@ -15,81 +16,83 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     try {
       const response = await api.post("/auth/login", { username, password });
       localStorage.setItem("token", response.data.access_token);
       router.push("/");
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Login failed. Please try again.");
-      }
+      if (err instanceof Error) setError(err.message);
+      else setError("Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-73px)] p-4 sm:p-6 bg-gradient-to-b from-gray-900 via-green-950 to-gray-900">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-gray-800/90 backdrop-blur-lg shadow-2xl rounded-2xl p-6 sm:p-10 w-full max-w-sm border-2 border-yellow-400"
-      >
-        {error && (
-          <div className="bg-red-700 text-white p-2.5 sm:p-3 rounded mb-4 text-center font-semibold shadow-md text-sm sm:text-base">
-            {error}
-          </div>
-        )}
-
-        <div className="mb-4">
-          <label
-            htmlFor="username"
-            className="block text-xs sm:text-sm font-semibold mb-2 text-white"
-          >
-            Username
-          </label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your username"
-            autoFocus
-            className="w-full bg-gray-700/80 text-white p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-            required
-          />
+    <div className="flex items-center justify-center min-h-[calc(100vh-65px)] p-4 bg-[#080a0d]">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-white mb-1">Welcome back</h1>
+          <p className="text-slate-500 text-sm">Sign in to your account</p>
         </div>
 
-        <div className="mb-6">
-          <label
-            htmlFor="password"
-            className="block text-xs sm:text-sm font-semibold mb-2 text-white"
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            className="w-full bg-gray-700/80 text-white p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full py-2.5 sm:py-3 rounded-xl bg-yellow-400 text-gray-900 font-bold text-base sm:text-lg hover:scale-105 hover:brightness-110 transition-transform duration-200 active:scale-95 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-[#0e1117] border border-[#1e2530] rounded-2xl p-6 space-y-4"
         >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          {error && (
+            <div className="px-4 py-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm text-center">
+              {error}
+            </div>
+          )}
+
+          <div>
+            <label htmlFor="username" className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2">
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your username"
+              autoFocus
+              className="w-full px-4 py-2.5 rounded-lg bg-[#080a0d] border border-[#1e2530] text-white text-sm placeholder:text-slate-600 focus:ring-1 focus:ring-[#d4af37]/40 focus:border-[#d4af37]/40 outline-none transition-colors"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full px-4 py-2.5 rounded-lg bg-[#080a0d] border border-[#1e2530] text-white text-sm placeholder:text-slate-600 focus:ring-1 focus:ring-[#d4af37]/40 focus:border-[#d4af37]/40 outline-none transition-colors"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-2.5 mt-2 rounded-lg bg-[#d4af37] text-[#0c0f14] font-semibold text-sm hover:bg-[#e8c547] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 shadow-[0_0_24px_rgba(212,175,55,0.15)]"
+          >
+            {loading ? "Signing in..." : "Sign in"}
+          </button>
+        </form>
+
+        <p className="text-center text-slate-500 text-sm mt-6">
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="text-[#d4af37] hover:text-[#e8c547] font-medium transition-colors">
+            Sign up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

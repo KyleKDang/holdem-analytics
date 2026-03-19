@@ -2,30 +2,19 @@
 
 import { useState, useEffect } from "react";
 import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  PointerSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
+  DndContext, DragEndEvent, DragOverlay, DragStartEvent,
+  PointerSensor, TouchSensor, useSensor, useSensors,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 
 import api from "@/services/api";
-
 import Card from "@/components/Card";
 import Deck from "@/components/Deck";
 import DroppableArea from "@/components/DroppableArea";
 import ResultsPanel from "@/components/ResultsPanel";
 import HandLoggerModal from "@/components/HandLoggerModal";
 
-type Odds = {
-  win: number;
-  tie: number;
-  loss: number;
-};
+type Odds = { win: number; tie: number; loss: number };
 
 const suits = ["S", "H", "D", "C"];
 const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
@@ -37,7 +26,6 @@ export default function HomePage() {
   const [numOpponents, setNumOpponents] = useState<number>(1);
   const [handRank, setHandRank] = useState<string>();
   const [odds, setOdds] = useState<Odds | null>(null);
-
   const [activeCard, setActiveCard] = useState<string | null>(null);
   const [showLogger, setShowLogger] = useState(false);
   const [showAuthMessage, setShowAuthMessage] = useState(false);
@@ -45,19 +33,9 @@ export default function HomePage() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Configure sensors for both mouse and touch (mobile)
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 10,
-      },
-    }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 10 } }),
   );
 
   useEffect(() => {
@@ -65,27 +43,21 @@ export default function HomePage() {
     setIsLoggedIn(!!localStorage.getItem("token"));
   }, []);
 
-  const sortDeck = (deck: string[]) => {
-    return deck.sort((a, b) => {
-      const rankA = ranks.indexOf(a[0]);
-      const rankB = ranks.indexOf(b[0]);
-      const suitA = suits.indexOf(a[1]);
-      const suitB = suits.indexOf(b[1]);
+  const sortDeck = (deck: string[]) =>
+    deck.sort((a, b) => {
+      const rankA = ranks.indexOf(a[0]), rankB = ranks.indexOf(b[0]);
+      const suitA = suits.indexOf(a[1]), suitB = suits.indexOf(b[1]);
       return suitA - suitB || rankA - rankB;
     });
-  };
 
-  const handleDragStart = (event: DragStartEvent) => {
+  const handleDragStart = (event: DragStartEvent) =>
     setActiveCard(event.active.id.toString().replace("deck-", ""));
-  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveCard(null);
     if (!over) return;
-
     const cardCode = active.id.toString().replace("deck-", "");
-
     const fromHole = holeCards.includes(cardCode);
     const fromBoard = boardCards.includes(cardCode);
     const fromDeck = deck.includes(cardCode);
@@ -94,63 +66,44 @@ export default function HomePage() {
       case "hole":
         if (holeCards.length < 2 && !fromHole) {
           setHoleCards((prev) => [...prev, cardCode]);
-          if (fromBoard)
-            setBoardCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromBoard) setBoardCards((prev) => prev.filter((c) => c !== cardCode));
           if (fromDeck) setDeck((prev) => prev.filter((c) => c !== cardCode));
         }
         break;
-
       case "board":
         if (boardCards.length < 5 && !fromBoard) {
           setBoardCards((prev) => [...prev, cardCode]);
-          if (fromHole)
-            setHoleCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromHole) setHoleCards((prev) => prev.filter((c) => c !== cardCode));
           if (fromDeck) setDeck((prev) => prev.filter((c) => c !== cardCode));
         }
         break;
-
       case "deck":
         if (!fromDeck) {
           setDeck((prev) => sortDeck([...prev, cardCode]));
-          if (fromHole)
-            setHoleCards((prev) => prev.filter((c) => c !== cardCode));
-          if (fromBoard)
-            setBoardCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromHole) setHoleCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromBoard) setBoardCards((prev) => prev.filter((c) => c !== cardCode));
         }
-        break;
-
-      default:
         break;
     }
   };
 
   const evaluateHand = async () => {
     try {
-      const response = await api.post("/tools/evaluate", {
-        hole_cards: holeCards,
-        board_cards: boardCards,
-      });
+      const response = await api.post("/tools/evaluate", { hole_cards: holeCards, board_cards: boardCards });
       setHandRank(response.data.hand);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) { console.log(err); }
   };
 
   const calculateOdds = async () => {
     setIsCalculating(true);
     try {
-      const response = await api.post("/tools/odds", {
-        hole_cards: holeCards,
-        board_cards: boardCards,
-        num_opponents: numOpponents,
-      });
+      const response = await api.post("/tools/odds", { hole_cards: holeCards, board_cards: boardCards, num_opponents: numOpponents });
       setOdds(response.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsCalculating(false);
-    }
+    } catch (err) { console.log(err); }
+    finally { setIsCalculating(false); }
   };
+
+  const isLogHandDisabled = !isLoggedIn || holeCards.length !== 2 || boardCards.length < 3;
 
   const handleLogHandClick = () => {
     if (isLogHandDisabled) {
@@ -158,9 +111,7 @@ export default function HomePage() {
       setTimeout(() => setShowDisabledMessage(false), 3000);
       return;
     }
-
-    const token = localStorage.getItem("token");
-    if (!token) {
+    if (!localStorage.getItem("token")) {
       setShowAuthMessage(true);
       setTimeout(() => setShowAuthMessage(false), 3000);
       return;
@@ -169,108 +120,101 @@ export default function HomePage() {
   };
 
   const getLogHandTooltip = () => {
-    if (!isLoggedIn) return "Please log in to save hands";
-    if (holeCards.length !== 2) return "Need 2 hole cards";
-    if (boardCards.length < 3) return "Need at least 3 board cards";
+    if (!isLoggedIn) return "Sign in to save hands";
+    if (holeCards.length !== 2) return "Select 2 hole cards first";
+    if (boardCards.length < 3) return "Select at least 3 board cards";
     return "";
   };
 
-  const isLogHandDisabled =
-    !isLoggedIn || holeCards.length !== 2 || boardCards.length < 3;
-  const tooltipMessage = getLogHandTooltip();
-
   return (
-    <DndContext
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="flex items-start min-h-[calc(100vh-73px)] p-3 sm:p-6 bg-green-900">
-        {/* Responsive Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-7xl mx-auto">
-          {/* Results Panel - Last on mobile, right column on desktop */}
-          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-3 lg:order-2 flex flex-col">
-            <ResultsPanel
-              handRank={handRank}
-              odds={odds}
-              isCalculating={isCalculating}
-            />
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
-              <button
-                onClick={evaluateHand}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
-              >
-                Evaluate Hand
-              </button>
-              <button
-                onClick={calculateOdds}
-                disabled={isCalculating}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
-              >
-                {isCalculating ? "Calculating..." : "Calculate Odds"}
-              </button>
-              <button
-                onClick={handleLogHandClick}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-br from-yellow-300 to-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:from-yellow-200 hover:to-yellow-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-yellow-400/50 hover:scale-[1.02] active:scale-95"
-              >
-                Log Hand
-              </button>
-              {showDisabledMessage && (
-                <div className="fixed bottom-4 right-4 left-4 sm:left-auto bg-yellow-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg z-50 text-sm sm:text-base text-center sm:text-left">
-                  {tooltipMessage}
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div className="min-h-[calc(100vh-65px)] p-4 sm:p-6 bg-[#080a0d]">
+        <div className="max-w-7xl mx-auto space-y-4">
+          {/* Top row: Controls + Results */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Left: Setup */}
+            <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5 space-y-5">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-3">
+                  Opponents
+                </p>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="range"
+                    min={1}
+                    max={9}
+                    value={numOpponents}
+                    onChange={(e) => setNumOpponents(Number(e.target.value))}
+                    className="flex-1 h-1.5 bg-[#1e2530] rounded-full appearance-none cursor-pointer accent-[#d4af37]"
+                  />
+                  <span className="text-[#d4af37] font-bold text-lg tabular-nums min-w-[24px] text-right">
+                    {numOpponents}
+                  </span>
                 </div>
-              )}
+              </div>
+
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-2">
+                  Hole Cards
+                </p>
+                <DroppableArea id="hole" cards={holeCards} />
+              </div>
+
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-2">
+                  Board Cards
+                </p>
+                <DroppableArea id="board" cards={boardCards} />
+              </div>
+            </div>
+
+            {/* Right: Results + Actions */}
+            <div className="flex flex-col gap-4">
+              <ResultsPanel handRank={handRank} odds={odds} isCalculating={isCalculating} />
+
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={evaluateHand}
+                  className="px-3 py-2.5 rounded-lg bg-[#0e1117] border border-[#1e2530] text-white text-sm font-medium hover:border-[#d4af37]/30 hover:text-[#d4af37] transition-all duration-150"
+                >
+                  Evaluate
+                </button>
+                <button
+                  onClick={calculateOdds}
+                  disabled={isCalculating}
+                  className="px-3 py-2.5 rounded-lg bg-[#0e1117] border border-[#1e2530] text-white text-sm font-medium hover:border-[#d4af37]/30 hover:text-[#d4af37] disabled:opacity-40 transition-all duration-150"
+                >
+                  {isCalculating ? "Calculating…" : "Calculate Odds"}
+                </button>
+                <button
+                  onClick={handleLogHandClick}
+                  className="px-3 py-2.5 rounded-lg bg-[#d4af37] text-[#0c0f14] text-sm font-semibold hover:bg-[#e8c547] transition-all duration-150 shadow-[0_0_20px_rgba(212,175,55,0.15)]"
+                >
+                  Log Hand
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Droppable Areas - First on mobile, left column on desktop */}
-          <div className="p-3 sm:p-4 rounded-lg bg-green-800/40 order-1 lg:order-1 flex flex-col">
-            <div className="mb-4">
-              <label
-                htmlFor="num-opponents"
-                className="block text-white font-semibold mb-2 text-sm sm:text-base"
-              >
-                Number of Opponents:{" "}
-                <span className="text-yellow-400 text-lg sm:text-xl">
-                  {numOpponents}
-                </span>
-              </label>
-              <input
-                id="num-opponents"
-                type="range"
-                min={1}
-                max={9}
-                value={numOpponents}
-                onChange={(e) => setNumOpponents(Number(e.target.value))}
-                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-yellow-400"
-              />
-            </div>
-
-            <h2 className="mb-2 text-white font-semibold text-sm sm:text-base">
-              Hole Cards
-            </h2>
-            <DroppableArea id="hole" cards={holeCards} />
-
-            <h2 className="mb-2 mt-4 text-white font-semibold text-sm sm:text-base">
-              Board Cards
-            </h2>
-            <DroppableArea id="board" cards={boardCards} />
-          </div>
-
-          {/* Deck - Second on mobile (right below droppables), full width at bottom on desktop */}
-          <div className="lg:col-span-2 p-3 sm:p-4 rounded-lg bg-green-800/40 order-2 lg:order-3">
-            <h2 className="mb-2 text-white font-semibold text-sm sm:text-base">
-              Deck
-            </h2>
+          {/* Deck */}
+          <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-3">
+              Deck — drag cards to set up your hand
+            </p>
             <Deck deck={deck} />
           </div>
         </div>
       </div>
 
+      {/* Toasts */}
+      {showDisabledMessage && (
+        <div className="fixed bottom-6 right-6 left-6 sm:left-auto sm:w-auto bg-[#0e1117] border border-[#d4af37]/30 text-[#d4af37] px-5 py-3 rounded-xl shadow-xl z-50 text-sm font-medium">
+          {getLogHandTooltip()}
+        </div>
+      )}
       {showAuthMessage && (
-        <div className="fixed bottom-4 right-4 bg-red-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg z-50 text-sm sm:text-base">
-          Please log in to save hands
+        <div className="fixed bottom-6 right-6 bg-[#0e1117] border border-rose-500/30 text-rose-400 px-5 py-3 rounded-xl shadow-xl z-50 text-sm font-medium">
+          Sign in to save hands
         </div>
       )}
 
@@ -284,9 +228,7 @@ export default function HomePage() {
       {typeof window !== "undefined" &&
         createPortal(
           <DragOverlay>
-            {activeCard ? (
-              <Card code={activeCard} id={`overlay-${activeCard}`} size={80} />
-            ) : null}
+            {activeCard ? <Card code={activeCard} id={`overlay-${activeCard}`} size={72} /> : null}
           </DragOverlay>,
           document.body,
         )}

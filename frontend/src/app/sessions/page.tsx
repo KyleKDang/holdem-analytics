@@ -19,9 +19,7 @@ export default function SessionsPage() {
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchSessions();
-  }, []);
+  useEffect(() => { fetchSessions(); }, []);
 
   const fetchSessions = async () => {
     try {
@@ -36,9 +34,7 @@ export default function SessionsPage() {
 
   const createSession = async () => {
     try {
-      const response = await api.post("/sessions", {
-        notes: notes.trim() || null,
-      });
+      const response = await api.post("/sessions", { notes: notes.trim() || null });
       setSessions([response.data, ...sessions]);
       setNotes("");
     } catch (err) {
@@ -61,44 +57,60 @@ export default function SessionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-3 sm:p-6 bg-green-900 flex items-center justify-center">
-        <p className="text-white text-lg sm:text-xl">Loading sessions...</p>
+      <div className="min-h-[calc(100vh-65px)] bg-[#080a0d] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-6 h-6 border-2 border-[#d4af37]/30 border-t-[#d4af37] rounded-full animate-spin" />
+          <p className="text-slate-500 text-sm">Loading sessions...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-6 bg-green-900">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
+    <div className="min-h-[calc(100vh-65px)] p-4 sm:p-8 bg-[#080a0d]">
+      <div className="max-w-3xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-xl font-bold text-white mb-1">Sessions</h1>
+          <p className="text-sm text-slate-500">
+            {sessions.length > 0
+              ? `${sessions.length} session${sessions.length !== 1 ? "s" : ""} — ${sessions.reduce((sum, s) => sum + s.hand_count, 0)} total hands`
+              : "Create a session to start logging hands"}
+          </p>
+        </div>
+
+        {/* Create session */}
+        <div className="flex gap-2 mb-6">
           <input
             type="text"
-            placeholder="Session name..."
+            placeholder="Session name (optional)"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="flex-1 p-2.5 sm:p-3 rounded-lg bg-gray-700/80 text-white text-sm sm:text-base focus:ring-2 focus:ring-yellow-400"
+            onKeyDown={(e) => e.key === "Enter" && createSession()}
+            className="flex-1 px-4 py-2.5 rounded-lg bg-[#0e1117] border border-[#1e2530] text-white text-sm placeholder:text-slate-600 focus:ring-1 focus:ring-[#d4af37]/40 focus:border-[#d4af37]/40 outline-none transition-colors"
           />
           <button
             onClick={createSession}
-            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-yellow-400 text-gray-900 font-bold text-sm sm:text-base rounded-lg hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#d4af37] text-[#0c0f14] font-semibold text-sm rounded-lg hover:bg-[#e8c547] transition-all duration-150 shadow-[0_0_20px_rgba(212,175,55,0.15)]"
           >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-            Create Session
+            <Plus className="w-4 h-4" />
+            New Session
           </button>
         </div>
 
+        {/* Sessions list */}
         {sessions.length === 0 ? (
-          <p className="text-gray-400 text-center py-8 text-sm sm:text-base">
-            No sessions yet. Create one to start logging hands!
-          </p>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="w-12 h-12 rounded-xl bg-[#0e1117] border border-[#1e2530] flex items-center justify-center mb-4">
+              <Plus className="w-5 h-5 text-slate-600" />
+            </div>
+            <p className="text-slate-400 font-medium mb-1">No sessions yet</p>
+            <p className="text-slate-600 text-sm">Create your first session to start logging hands</p>
+          </div>
         ) : (
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-2">
             {sessions.map((session) => (
-              <SessionItem
-                key={session.id}
-                session={session}
-                onDelete={deleteSession}
-              />
+              <SessionItem key={session.id} session={session} onDelete={deleteSession} />
             ))}
           </div>
         )}

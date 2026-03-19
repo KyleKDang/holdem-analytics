@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import api from "@/services/api";
 import { Loader2 } from "lucide-react";
+import api from "@/services/api";
 import WinRateChart from "@/components/analytics/WinRateChart";
 import PositionChart from "@/components/analytics/PositionChart";
 import ActionChart from "@/components/analytics/ActionChart";
@@ -62,15 +62,22 @@ interface DashboardData {
   };
 }
 
+function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5">
+      <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-4">
+        {title}
+      </p>
+      {children}
+    </div>
+  );
+}
+
 export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
-    null,
-  );
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  useEffect(() => { fetchDashboardData(); }, []);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -86,75 +93,59 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-3 sm:p-6 bg-green-900 flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-yellow-400 animate-spin" />
+      <div className="min-h-[calc(100vh-65px)] bg-[#080a0d] flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-[#d4af37] animate-spin" />
       </div>
     );
   }
 
   if (!dashboardData || dashboardData.overall.total_hands === 0) {
     return (
-      <div className="min-h-screen p-3 sm:p-6 bg-green-900">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-green-800/40 p-6 sm:p-8 rounded-lg text-center">
-            <p className="text-white text-lg sm:text-xl mb-4">
-              No hand data available yet
-            </p>
-            <p className="text-gray-400 text-sm sm:text-base">
-              Start logging hands to see your analytics and insights!
-            </p>
+      <div className="min-h-[calc(100vh-65px)] bg-[#080a0d] flex items-center justify-center p-6">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-xl bg-[#0e1117] border border-[#1e2530] flex items-center justify-center mx-auto mb-4">
+            <Loader2 className="w-5 h-5 text-slate-600" />
           </div>
+          <p className="text-white font-medium mb-1">No data yet</p>
+          <p className="text-slate-500 text-sm">Start logging hands to see your analytics</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-6 bg-green-900">
-      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
-        {/* Stats Cards */}
+    <div className="min-h-[calc(100vh-65px)] p-4 sm:p-8 bg-[#080a0d]">
+      <div className="max-w-7xl mx-auto space-y-4">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-white mb-1">Dashboard</h1>
+          <p className="text-sm text-slate-500">
+            {dashboardData.overall.total_hands} hands across {dashboardData.overall.total_sessions} sessions
+          </p>
+        </div>
+
         <StatsCards stats={dashboardData.overall} />
 
-        {/* Win Rate Over Time */}
-        <div className="bg-green-800/40 p-4 sm:p-6 rounded-lg">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
-            Win Rate Over Time
-          </h2>
+        <SectionCard title="Win Rate Over Time">
           <WinRateChart data={dashboardData.timeline.timeline} />
-        </div>
+        </SectionCard>
 
-        {/* Position and Action Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          <div className="bg-green-800/40 p-4 sm:p-6 rounded-lg">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
-              Win Rate by Position
-            </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <SectionCard title="Win Rate by Position">
             <PositionChart data={dashboardData.positions.positions} />
-          </div>
-
-          <div className="bg-green-800/40 p-4 sm:p-6 rounded-lg">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
-              Action Distribution
-            </h2>
+          </SectionCard>
+          <SectionCard title="Action Distribution">
             <ActionChart data={dashboardData.actions.actions} />
-          </div>
+          </SectionCard>
         </div>
 
-        {/* Playing Style Profile */}
-        <div className="bg-green-800/40 p-4 sm:p-6 rounded-lg">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
-            Playing Style Profile
-          </h2>
+        <SectionCard title="Playing Style">
           <StyleProfile style={dashboardData.style} />
-        </div>
+        </SectionCard>
 
-        {/* Session Performance Table */}
-        <div className="bg-green-800/40 p-4 sm:p-6 rounded-lg">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
-            Recent Sessions
-          </h2>
+        <SectionCard title="Recent Sessions">
           <SessionTable />
-        </div>
+        </SectionCard>
       </div>
     </div>
   );
