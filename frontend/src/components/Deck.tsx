@@ -8,23 +8,28 @@ interface DeckProps {
 }
 
 export default function Deck({ deck }: DeckProps) {
-  const { setNodeRef } = useDroppable({ id: "deck" });
+  const { setNodeRef, isOver } = useDroppable({ id: "deck" });
 
   return (
     <div className="relative">
-      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-900 to-transparent pointer-events-none z-10" />
-
+      <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#0c0f14] to-transparent pointer-events-none z-10 rounded-r-lg" />
       <div
         ref={setNodeRef}
-        className="flex gap-1.5 sm:gap-2 h-[120px] sm:h-auto overflow-x-auto overflow-y-hidden p-2 sm:p-4 border rounded bg-gray-900"
+        className={`flex gap-1.5 overflow-x-auto overflow-y-hidden p-3 rounded-lg transition-all duration-200 ${
+          isOver
+            ? "bg-[#d4af37]/5 ring-1 ring-[#d4af37]/30"
+            : "bg-[#080a0d]"
+        }`}
         style={{
-          scrollbarWidth: "auto",
-          scrollbarColor: "#9CA3AF #1F2937",
+          scrollbarWidth: "thin",
+          scrollbarColor: "#2a2f3a #080a0d",
+          height: "110px",
+          alignItems: "center",
         }}
       >
         {deck.map((c) => (
           <div key={c} className="flex-shrink-0">
-            <Card code={c} id={c} size={50} />
+            <Card code={c} id={c} size={46} />
           </div>
         ))}
       </div>
