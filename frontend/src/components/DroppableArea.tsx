@@ -9,8 +9,8 @@ interface DroppableAreaProps {
 }
 
 const SLOT_CONFIG = {
-  hole:  { slots: 2, cardSize: 64 },
-  board: { slots: 5, cardSize: 56 },
+  hole:  { slots: 2, cardSize: 58 },
+  board: { slots: 5, cardSize: 58 },
 };
 
 export default function DroppableArea({ id, cards }: DroppableAreaProps) {

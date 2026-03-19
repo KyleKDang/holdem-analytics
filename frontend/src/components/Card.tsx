@@ -16,10 +16,9 @@ export default function Card({ code, size = 60, id }: CardProps) {
   const style = {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : "translate3d(0,0,0)",
+      : undefined,
     opacity: isDragging ? 0.3 : 1,
-    touchAction: "none",
-    transition: isDragging ? "none" : "opacity 0.15s ease",
+    touchAction: "none" as const,
   };
 
   return (
@@ -28,7 +27,7 @@ export default function Card({ code, size = 60, id }: CardProps) {
       style={style}
       {...listeners}
       {...attributes}
-      className="inline-flex items-center justify-center rounded-[4px] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.4)] cursor-grab active:cursor-grabbing touch-none hover:shadow-[0_4px_16px_rgba(212,175,55,0.3)] hover:-translate-y-0.5 transition-all duration-150"
+      className="inline-flex items-center justify-center rounded-[4px] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.4)] cursor-grab active:cursor-grabbing touch-none hover:shadow-[0_4px_16px_rgba(212,175,55,0.3)] transition-shadow duration-150"
     >
       <Image
         src={`/cards/${code}.png`}
