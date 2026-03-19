@@ -15,22 +15,22 @@ interface ResultsPanelProps {
   isCalculating: boolean;
 }
 
-export default function ResultsPanel({
-  handRank,
-  odds,
-  isCalculating,
-}: ResultsPanelProps) {
+export default function ResultsPanel({ handRank, odds, isCalculating }: ResultsPanelProps) {
   return (
-    <div className="flex flex-col items-center justify-around flex-1 p-4 sm:p-6 border-2 border-yellow-400 rounded-2xl bg-gray-800/90 shadow-xl">
-      <div className="w-full">
-        <h2 className="text-xl sm:text-2xl font-bold text-yellow-400 mb-4 text-center">
+    <div className="flex flex-col gap-5 p-5 rounded-xl bg-[#0e1117] border border-[#1e2530] flex-1">
+      <div>
+        <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-3">
           Results
-        </h2>
-
+        </p>
         <HandRankDisplay handRank={handRank} />
       </div>
 
-      <div className="w-full">
+      <div
+        className="border-t border-[#1e2530] pt-4"
+      >
+        <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-3">
+          Odds
+        </p>
         <OddsDisplay odds={odds} isCalculating={isCalculating} />
       </div>
     </div>

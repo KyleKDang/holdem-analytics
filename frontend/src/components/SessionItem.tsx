@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import { Trash2, ChevronDown, ChevronRight, Hash } from "lucide-react";
 import api from "@/services/api";
 import HandRow from "./HandRow";
 
@@ -48,56 +48,59 @@ export default function SessionItem({ session, onDelete }: SessionItemProps) {
   }, [session.id]);
 
   useEffect(() => {
-    if (isOpen && hands.length === 0) {
-      fetchHands();
-    }
+    if (isOpen && hands.length === 0) fetchHands();
   }, [isOpen, hands.length, fetchHands]);
 
   return (
-    <div className="border-2 border-green-700 rounded-lg overflow-hidden bg-green-800/40">
+    <div className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+      isOpen ? "border-[#2a3040] bg-[#0c0f14]" : "border-[#1a1f29] bg-[#0e1117] hover:border-[#2a3040]"
+    }`}>
       <div
-        className="flex items-center justify-between p-3 sm:p-4 cursor-pointer hover:bg-green-800/60 transition-colors"
+        className="flex items-center gap-3 px-5 py-4 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-          {isOpen ? (
-            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 flex-shrink-0" />
-          ) : (
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 flex-shrink-0" />
-          )}
-          <div className="min-w-0 flex-1">
-            <h3 className="text-base sm:text-xl font-bold text-white truncate">
-              {session.notes || "Unnamed Session"}
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-400">
-              {new Date(session.start_time).toLocaleDateString()} •{" "}
-              {session.hand_count} hands
-            </p>
-          </div>
+        <button className="text-slate-500 hover:text-slate-300 transition-colors flex-shrink-0">
+          {isOpen
+            ? <ChevronDown className="w-4 h-4" />
+            : <ChevronRight className="w-4 h-4" />
+          }
+        </button>
+
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold text-white truncate">
+            {session.notes || "Unnamed Session"}
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            {new Date(session.start_time).toLocaleDateString("en-US", {
+              month: "short", day: "numeric", year: "numeric"
+            })}
+          </p>
         </div>
+
+        <div className="flex items-center gap-1.5 text-xs text-slate-500 mr-3">
+          <Hash className="w-3 h-3" />
+          <span>{session.hand_count} hands</span>
+        </div>
+
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(session.id);
-          }}
-          className="p-1.5 sm:p-2 hover:bg-red-600 rounded transition-colors flex-shrink-0"
+          onClick={(e) => { e.stopPropagation(); onDelete(session.id); }}
+          className="p-1.5 text-slate-600 hover:text-rose-400 hover:bg-rose-500/10 rounded-md transition-colors flex-shrink-0"
         >
-          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+          <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
 
       {isOpen && (
-        <div className="p-3 sm:p-4 bg-gray-800/50">
+        <div
+          className="px-5 pb-5 pt-1"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+        >
           {loading ? (
-            <p className="text-gray-400 text-center py-4 text-sm sm:text-base">
-              Loading hands...
-            </p>
+            <p className="text-slate-500 text-center py-6 text-sm">Loading hands...</p>
           ) : hands.length === 0 ? (
-            <p className="text-gray-400 text-center py-4 text-sm sm:text-base">
-              No hands logged yet
-            </p>
+            <p className="text-slate-600 text-center py-6 text-sm">No hands logged in this session</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1.5 mt-3">
               {hands.map((hand, index) => (
                 <HandRow key={hand.id} hand={hand} handNumber={index + 1} />
               ))}
