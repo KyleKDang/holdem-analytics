@@ -1,8 +1,14 @@
 "use client";
 
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, ReferenceLine,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 
 interface WinRateChartProps {
@@ -38,13 +44,23 @@ export default function WinRateChart({ data }: WinRateChartProps) {
 
   const sampledData =
     data.length > 100
-      ? data.filter((_, i) => i % Math.ceil(data.length / 100) === 0 || i === data.length - 1)
+      ? data.filter(
+          (_, i) =>
+            i % Math.ceil(data.length / 100) === 0 || i === data.length - 1,
+        )
       : data;
 
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <LineChart data={sampledData} margin={{ top: 4, right: 4, left: -10, bottom: 4 }}>
-        <CartesianGrid strokeDasharray="2 4" stroke="#1e2530" vertical={false} />
+      <LineChart
+        data={sampledData}
+        margin={{ top: 4, right: 4, left: -10, bottom: 4 }}
+      >
+        <CartesianGrid
+          strokeDasharray="2 4"
+          stroke="#1e2530"
+          vertical={false}
+        />
         <XAxis
           dataKey="hand_number"
           stroke="#2a3040"
@@ -60,7 +76,10 @@ export default function WinRateChart({ data }: WinRateChartProps) {
           domain={[0, 100]}
           tickFormatter={(v) => `${v}%`}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#2a3040", strokeWidth: 1 }} />
+        <Tooltip
+          content={<CustomTooltip />}
+          cursor={{ stroke: "#2a3040", strokeWidth: 1 }}
+        />
         <ReferenceLine y={50} stroke="#2a3040" strokeDasharray="4 4" />
         <Line
           type="monotone"

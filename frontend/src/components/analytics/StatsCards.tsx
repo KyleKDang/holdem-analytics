@@ -83,8 +83,8 @@ export default function StatsCards({ stats }: StatsCardsProps) {
           stats.aggression_factor < 1
             ? "Passive"
             : stats.aggression_factor < 2
-            ? "Balanced"
-            : "Aggressive"
+              ? "Balanced"
+              : "Aggressive"
         }
         icon={Zap}
         accent="#f59e0b"

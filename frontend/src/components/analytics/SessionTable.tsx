@@ -18,7 +18,9 @@ export default function SessionTable() {
   const [sessions, setSessions] = useState<SessionData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { fetchSessions(); }, []);
+  useEffect(() => {
+    fetchSessions();
+  }, []);
 
   const fetchSessions = async () => {
     try {
@@ -32,11 +34,17 @@ export default function SessionTable() {
   };
 
   if (loading) {
-    return <p className="text-slate-500 text-sm text-center py-6">Loading...</p>;
+    return (
+      <p className="text-slate-500 text-sm text-center py-6">Loading...</p>
+    );
   }
 
   if (sessions.length === 0) {
-    return <p className="text-slate-600 text-sm text-center py-6">No sessions found</p>;
+    return (
+      <p className="text-slate-600 text-sm text-center py-6">
+        No sessions found
+      </p>
+    );
   }
 
   return (
@@ -44,16 +52,18 @@ export default function SessionTable() {
       <table className="w-full text-left">
         <thead>
           <tr style={{ borderBottom: "1px solid #1e2530" }}>
-            {["Session", "Date", "Hands", "W · L · T", "Win Rate"].map((h, i) => (
-              <th
-                key={h}
-                className={`pb-3 text-[10px] uppercase tracking-[0.12em] text-slate-500 font-semibold ${
-                  i >= 2 ? "text-center" : ""
-                } ${i === 0 ? "pr-4" : "px-4"}`}
-              >
-                {h}
-              </th>
-            ))}
+            {["Session", "Date", "Hands", "W · L · T", "Win Rate"].map(
+              (h, i) => (
+                <th
+                  key={h}
+                  className={`pb-3 text-[10px] uppercase tracking-[0.12em] text-slate-500 font-semibold ${
+                    i >= 2 ? "text-center" : ""
+                  } ${i === 0 ? "pr-4" : "px-4"}`}
+                >
+                  {h}
+                </th>
+              ),
+            )}
           </tr>
         </thead>
         <tbody>
@@ -68,7 +78,9 @@ export default function SessionTable() {
               </td>
               <td className="py-3 px-4 text-sm text-slate-400 whitespace-nowrap">
                 {new Date(session.start_time).toLocaleDateString("en-US", {
-                  month: "short", day: "numeric", year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
                 })}
               </td>
               <td className="py-3 px-4 text-sm text-white text-center tabular-nums font-medium">
@@ -89,8 +101,8 @@ export default function SessionTable() {
                     session.win_rate >= 50
                       ? "text-emerald-400"
                       : session.win_rate >= 40
-                      ? "text-[#d4af37]"
-                      : "text-rose-400"
+                        ? "text-[#d4af37]"
+                        : "text-rose-400"
                   }`}
                 >
                   {session.win_rate.toFixed(1)}%

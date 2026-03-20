@@ -67,23 +67,29 @@ export default function HandRow({ hand, handNumber }: HandRowProps) {
 
       <div className="flex items-center gap-1.5 flex-wrap sm:ml-auto">
         {hand.player_position && (
-          <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${positionColors[hand.player_position] || "text-slate-400 bg-slate-500/10 border-slate-500/20"}`}>
+          <span
+            className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${positionColors[hand.player_position] || "text-slate-400 bg-slate-500/10 border-slate-500/20"}`}
+          >
             {hand.player_position}
           </span>
         )}
         {hand.action_taken && (
-          <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${actionColors[hand.action_taken] || "text-slate-400 bg-slate-500/10 border-slate-500/20"}`}>
+          <span
+            className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${actionColors[hand.action_taken] || "text-slate-400 bg-slate-500/10 border-slate-500/20"}`}
+          >
             {hand.action_taken}
           </span>
         )}
         {hand.result && (
-          <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${
-            hand.result === "win"
-              ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-              : hand.result === "loss"
-                ? "text-rose-400 bg-rose-500/10 border-rose-500/20"
-                : "text-slate-400 bg-slate-500/10 border-slate-500/20"
-          }`}>
+          <span
+            className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${
+              hand.result === "win"
+                ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                : hand.result === "loss"
+                  ? "text-rose-400 bg-rose-500/10 border-rose-500/20"
+                  : "text-slate-400 bg-slate-500/10 border-slate-500/20"
+            }`}
+          >
             {hand.result}
           </span>
         )}

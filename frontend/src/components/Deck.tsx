@@ -16,9 +16,7 @@ export default function Deck({ deck }: DeckProps) {
       <div
         ref={setNodeRef}
         className={`flex gap-1.5 overflow-x-auto overflow-y-hidden p-3 rounded-lg transition-all duration-200 ${
-          isOver
-            ? "bg-[#d4af37]/5 ring-1 ring-[#d4af37]/30"
-            : "bg-[#080a0d]"
+          isOver ? "bg-[#d4af37]/5 ring-1 ring-[#d4af37]/30" : "bg-[#080a0d]"
         }`}
         style={{
           scrollbarWidth: "thin",

@@ -2,8 +2,14 @@
 
 import { useState, useEffect } from "react";
 import {
-  DndContext, DragEndEvent, DragOverlay, DragStartEvent,
-  PointerSensor, TouchSensor, useSensor, useSensors,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 
@@ -35,7 +41,9 @@ export default function HomePage() {
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 10 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 250, tolerance: 10 },
+    }),
   );
 
   useEffect(() => {
@@ -45,8 +53,10 @@ export default function HomePage() {
 
   const sortDeck = (deck: string[]) =>
     deck.sort((a, b) => {
-      const rankA = ranks.indexOf(a[0]), rankB = ranks.indexOf(b[0]);
-      const suitA = suits.indexOf(a[1]), suitB = suits.indexOf(b[1]);
+      const rankA = ranks.indexOf(a[0]),
+        rankB = ranks.indexOf(b[0]);
+      const suitA = suits.indexOf(a[1]),
+        suitB = suits.indexOf(b[1]);
       return suitA - suitB || rankA - rankB;
     });
 
@@ -66,22 +76,26 @@ export default function HomePage() {
       case "hole":
         if (holeCards.length < 2 && !fromHole) {
           setHoleCards((prev) => [...prev, cardCode]);
-          if (fromBoard) setBoardCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromBoard)
+            setBoardCards((prev) => prev.filter((c) => c !== cardCode));
           if (fromDeck) setDeck((prev) => prev.filter((c) => c !== cardCode));
         }
         break;
       case "board":
         if (boardCards.length < 5 && !fromBoard) {
           setBoardCards((prev) => [...prev, cardCode]);
-          if (fromHole) setHoleCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromHole)
+            setHoleCards((prev) => prev.filter((c) => c !== cardCode));
           if (fromDeck) setDeck((prev) => prev.filter((c) => c !== cardCode));
         }
         break;
       case "deck":
         if (!fromDeck) {
           setDeck((prev) => sortDeck([...prev, cardCode]));
-          if (fromHole) setHoleCards((prev) => prev.filter((c) => c !== cardCode));
-          if (fromBoard) setBoardCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromHole)
+            setHoleCards((prev) => prev.filter((c) => c !== cardCode));
+          if (fromBoard)
+            setBoardCards((prev) => prev.filter((c) => c !== cardCode));
         }
         break;
     }
@@ -89,21 +103,34 @@ export default function HomePage() {
 
   const evaluateHand = async () => {
     try {
-      const response = await api.post("/tools/evaluate", { hole_cards: holeCards, board_cards: boardCards });
+      const response = await api.post("/tools/evaluate", {
+        hole_cards: holeCards,
+        board_cards: boardCards,
+      });
       setHandRank(response.data.hand);
-    } catch (err) { console.log(err); }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const calculateOdds = async () => {
     setIsCalculating(true);
     try {
-      const response = await api.post("/tools/odds", { hole_cards: holeCards, board_cards: boardCards, num_opponents: numOpponents });
+      const response = await api.post("/tools/odds", {
+        hole_cards: holeCards,
+        board_cards: boardCards,
+        num_opponents: numOpponents,
+      });
       setOdds(response.data);
-    } catch (err) { console.log(err); }
-    finally { setIsCalculating(false); }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsCalculating(false);
+    }
   };
 
-  const isLogHandDisabled = !isLoggedIn || holeCards.length !== 2 || boardCards.length < 3;
+  const isLogHandDisabled =
+    !isLoggedIn || holeCards.length !== 2 || boardCards.length < 3;
 
   const handleLogHandClick = () => {
     if (isLogHandDisabled) {
@@ -127,7 +154,11 @@ export default function HomePage() {
   };
 
   return (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       <div className="min-h-[calc(100vh-65px)] p-4 sm:p-6 bg-[#080a0d]">
         <div className="max-w-7xl mx-auto space-y-4">
           {/* Top row: Controls + Results */}
@@ -170,7 +201,11 @@ export default function HomePage() {
 
             {/* Right: Results + Actions */}
             <div className="flex flex-col gap-4">
-              <ResultsPanel handRank={handRank} odds={odds} isCalculating={isCalculating} />
+              <ResultsPanel
+                handRank={handRank}
+                odds={odds}
+                isCalculating={isCalculating}
+              />
 
               <div className="grid grid-cols-3 gap-2">
                 <button
@@ -228,7 +263,9 @@ export default function HomePage() {
       {typeof window !== "undefined" &&
         createPortal(
           <DragOverlay>
-            {activeCard ? <Card code={activeCard} id={`overlay-${activeCard}`} size={72} /> : null}
+            {activeCard ? (
+              <Card code={activeCard} id={`overlay-${activeCard}`} size={72} />
+            ) : null}
           </DragOverlay>,
           document.body,
         )}

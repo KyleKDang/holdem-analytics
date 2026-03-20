@@ -17,14 +17,17 @@ export default function RegisterPage() {
   const validateUsername = (u: string): string | null => {
     if (u.length < 3) return "Username must be at least 3 characters";
     if (u.length > 20) return "Username must be at most 20 characters";
-    if (!/^[a-zA-Z0-9_]+$/.test(u)) return "Username can only contain letters, numbers, and underscores";
+    if (!/^[a-zA-Z0-9_]+$/.test(u))
+      return "Username can only contain letters, numbers, and underscores";
     return null;
   };
 
   const validatePassword = (p: string): string | null => {
     if (p.length < 8) return "Password must be at least 8 characters";
-    if (!/[A-Z]/.test(p)) return "Password must contain at least one uppercase letter";
-    if (!/[a-z]/.test(p)) return "Password must contain at least one lowercase letter";
+    if (!/[A-Z]/.test(p))
+      return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(p))
+      return "Password must contain at least one lowercase letter";
     if (!/[0-9]/.test(p)) return "Password must contain at least one number";
     return null;
   };
@@ -35,13 +38,29 @@ export default function RegisterPage() {
     setError(null);
 
     const usernameError = validateUsername(username);
-    if (usernameError) { setError(usernameError); setLoading(false); return; }
+    if (usernameError) {
+      setError(usernameError);
+      setLoading(false);
+      return;
+    }
     const passwordError = validatePassword(password);
-    if (passwordError) { setError(passwordError); setLoading(false); return; }
-    if (password !== confirmPassword) { setError("Passwords do not match"); setLoading(false); return; }
+    if (passwordError) {
+      setError(passwordError);
+      setLoading(false);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const response = await api.post("/auth/register", { email, username, password });
+      const response = await api.post("/auth/register", {
+        email,
+        username,
+        password,
+      });
       localStorage.setItem("token", response.data.access_token);
       router.push("/");
     } catch (err: unknown) {
@@ -56,7 +75,9 @@ export default function RegisterPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-65px)] p-4 bg-[#080a0d]">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-1">Create an account</h1>
+          <h1 className="text-2xl font-bold text-white mb-1">
+            Create an account
+          </h1>
           <p className="text-slate-500 text-sm">Track your poker performance</p>
         </div>
 
@@ -71,13 +92,44 @@ export default function RegisterPage() {
           )}
 
           {[
-            { id: "email", label: "Email", type: "email", value: email, setter: setEmail, placeholder: "you@example.com" },
-            { id: "username", label: "Username", type: "text", value: username, setter: setUsername, placeholder: "Choose a username" },
-            { id: "password", label: "Password", type: "password", value: password, setter: setPassword, placeholder: "At least 8 characters" },
-            { id: "confirmPassword", label: "Confirm Password", type: "password", value: confirmPassword, setter: setConfirmPassword, placeholder: "Repeat your password" },
+            {
+              id: "email",
+              label: "Email",
+              type: "email",
+              value: email,
+              setter: setEmail,
+              placeholder: "you@example.com",
+            },
+            {
+              id: "username",
+              label: "Username",
+              type: "text",
+              value: username,
+              setter: setUsername,
+              placeholder: "Choose a username",
+            },
+            {
+              id: "password",
+              label: "Password",
+              type: "password",
+              value: password,
+              setter: setPassword,
+              placeholder: "At least 8 characters",
+            },
+            {
+              id: "confirmPassword",
+              label: "Confirm Password",
+              type: "password",
+              value: confirmPassword,
+              setter: setConfirmPassword,
+              placeholder: "Repeat your password",
+            },
           ].map(({ id, label, type, value, setter, placeholder }, i) => (
             <div key={id}>
-              <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2">
+              <label
+                htmlFor={id}
+                className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2"
+              >
                 {label}
               </label>
               <input
@@ -104,7 +156,10 @@ export default function RegisterPage() {
 
         <p className="text-center text-slate-500 text-sm mt-6">
           Already have an account?{" "}
-          <Link href="/login" className="text-[#d4af37] hover:text-[#e8c547] font-medium transition-colors">
+          <Link
+            href="/login"
+            className="text-[#d4af37] hover:text-[#e8c547] font-medium transition-colors"
+          >
             Sign in
           </Link>
         </p>

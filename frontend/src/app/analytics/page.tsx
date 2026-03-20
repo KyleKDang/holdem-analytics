@@ -62,7 +62,13 @@ interface DashboardData {
   };
 }
 
-function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5">
       <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-4">
@@ -75,9 +81,13 @@ function SectionCard({ title, children }: { title: string; children: React.React
 
 export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+    null,
+  );
 
-  useEffect(() => { fetchDashboardData(); }, []);
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -107,7 +117,9 @@ export default function AnalyticsPage() {
             <Loader2 className="w-5 h-5 text-slate-600" />
           </div>
           <p className="text-white font-medium mb-1">No data yet</p>
-          <p className="text-slate-500 text-sm">Start logging hands to see your analytics</p>
+          <p className="text-slate-500 text-sm">
+            Start logging hands to see your analytics
+          </p>
         </div>
       </div>
     );
@@ -120,7 +132,8 @@ export default function AnalyticsPage() {
         <div className="mb-6">
           <h1 className="text-xl font-bold text-white mb-1">Dashboard</h1>
           <p className="text-sm text-slate-500">
-            {dashboardData.overall.total_hands} hands across {dashboardData.overall.total_sessions} sessions
+            {dashboardData.overall.total_hands} hands across{" "}
+            {dashboardData.overall.total_sessions} sessions
           </p>
         </div>
 

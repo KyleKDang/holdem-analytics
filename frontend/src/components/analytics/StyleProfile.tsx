@@ -30,7 +30,9 @@ function MetricBar({
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
         <p className="text-xs text-slate-500">{label}</p>
-        <p className="text-sm font-semibold text-white tabular-nums">{display}</p>
+        <p className="text-sm font-semibold text-white tabular-nums">
+          {display}
+        </p>
       </div>
       <div className="h-1 bg-[#1e2530] rounded-full overflow-hidden">
         <div
@@ -51,16 +53,22 @@ export default function StyleProfile({ style }: StyleProfileProps) {
           <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-4">
             Playing Style
           </p>
-          <p className="text-3xl font-bold text-white mb-1">{style.style_rating}</p>
+          <p className="text-3xl font-bold text-white mb-1">
+            {style.style_rating}
+          </p>
         </div>
         <div className="space-y-3 mt-4 pt-4 border-t border-[#1e2530]">
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-500">Tight / Loose</span>
-            <span className="text-xs font-semibold text-[#d4af37]">{style.tight_loose}</span>
+            <span className="text-xs font-semibold text-[#d4af37]">
+              {style.tight_loose}
+            </span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-500">Passive / Aggressive</span>
-            <span className="text-xs font-semibold text-[#d4af37]">{style.passive_aggressive}</span>
+            <span className="text-xs font-semibold text-[#d4af37]">
+              {style.passive_aggressive}
+            </span>
           </div>
         </div>
       </div>

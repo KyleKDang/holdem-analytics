@@ -9,13 +9,16 @@ interface DroppableAreaProps {
 }
 
 const SLOT_CONFIG = {
-  hole:  { slots: 2, cardSize: 58 },
+  hole: { slots: 2, cardSize: 58 },
   board: { slots: 5, cardSize: 58 },
 };
 
 export default function DroppableArea({ id, cards }: DroppableAreaProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
-  const config = SLOT_CONFIG[id as keyof typeof SLOT_CONFIG] ?? { slots: 5, cardSize: 46 };
+  const config = SLOT_CONFIG[id as keyof typeof SLOT_CONFIG] ?? {
+    slots: 5,
+    cardSize: 46,
+  };
 
   return (
     <div

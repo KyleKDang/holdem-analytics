@@ -47,7 +47,10 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label htmlFor="username" className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2">
+            <label
+              htmlFor="username"
+              className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2"
+            >
               Username
             </label>
             <input
@@ -63,7 +66,10 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2"
+            >
               Password
             </label>
             <input
@@ -88,7 +94,10 @@ export default function LoginPage() {
 
         <p className="text-center text-slate-500 text-sm mt-6">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#d4af37] hover:text-[#e8c547] font-medium transition-colors">
+          <Link
+            href="/register"
+            className="text-[#d4af37] hover:text-[#e8c547] font-medium transition-colors"
+          >
             Sign up
           </Link>
         </p>

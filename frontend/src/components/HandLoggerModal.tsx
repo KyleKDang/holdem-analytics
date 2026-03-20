@@ -63,9 +63,18 @@ export default function HandLoggerModal({
   }, [isOpen, selectedSession]);
 
   const handleSave = async () => {
-    if (!selectedSession) { alert("Please select a session"); return; }
-    if (holeCards.length !== 2) { alert("Please select exactly 2 hole cards"); return; }
-    if (boardCards.length < 3 || boardCards.length > 5) { alert("Board must have 3-5 cards"); return; }
+    if (!selectedSession) {
+      alert("Please select a session");
+      return;
+    }
+    if (holeCards.length !== 2) {
+      alert("Please select exactly 2 hole cards");
+      return;
+    }
+    if (boardCards.length < 3 || boardCards.length > 5) {
+      alert("Board must have 3-5 cards");
+      return;
+    }
     setIsLoading(true);
     try {
       await api.post("/hands", {
@@ -82,7 +91,9 @@ export default function HandLoggerModal({
       let errorMessage = "Unknown error";
       if (error instanceof Error) errorMessage = error.message;
       if (typeof error === "object" && error !== null && "response" in error) {
-        const axiosError = error as { response?: { data?: { detail?: string } } };
+        const axiosError = error as {
+          response?: { data?: { detail?: string } };
+        };
         const apiError = axiosError.response?.data?.detail;
         if (apiError) errorMessage = apiError;
       }
@@ -107,7 +118,9 @@ export default function HandLoggerModal({
         <div className="flex items-center justify-between px-6 py-5 border-b border-[#1e2530]">
           <div>
             <h2 className="text-base font-semibold text-white">Log Hand</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Save this hand to your session</p>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Save this hand to your session
+            </p>
           </div>
           <button
             onClick={handleClose}
@@ -135,7 +148,8 @@ export default function HandLoggerModal({
               >
                 {sessions.map((session) => (
                   <option key={session.id} value={session.id}>
-                    {session.notes || "Unnamed Session"} — {new Date(session.start_time).toLocaleDateString()}
+                    {session.notes || "Unnamed Session"} —{" "}
+                    {new Date(session.start_time).toLocaleDateString()}
                   </option>
                 ))}
               </select>
@@ -218,13 +232,31 @@ export default function HandLoggerModal({
 
           {/* Summary */}
           <div className="rounded-lg bg-[#080a0d] border border-[#1e2530] p-4">
-            <p className="text-[10px] uppercase tracking-[0.1em] text-slate-500 font-semibold mb-2">Summary</p>
+            <p className="text-[10px] uppercase tracking-[0.1em] text-slate-500 font-semibold mb-2">
+              Summary
+            </p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-              <p className="text-xs text-slate-500">Hole: <span className="text-slate-300">{holeCards.join(", ") || "—"}</span></p>
-              <p className="text-xs text-slate-500">Board: <span className="text-slate-300">{boardCards.join(", ") || "—"}</span></p>
-              <p className="text-xs text-slate-500">Position: <span className="text-slate-300">{position}</span></p>
-              <p className="text-xs text-slate-500">Action: <span className="text-slate-300">{action || "—"}</span></p>
-              <p className="text-xs text-slate-500">Result: <span className="text-slate-300">{result || "—"}</span></p>
+              <p className="text-xs text-slate-500">
+                Hole:{" "}
+                <span className="text-slate-300">
+                  {holeCards.join(", ") || "—"}
+                </span>
+              </p>
+              <p className="text-xs text-slate-500">
+                Board:{" "}
+                <span className="text-slate-300">
+                  {boardCards.join(", ") || "—"}
+                </span>
+              </p>
+              <p className="text-xs text-slate-500">
+                Position: <span className="text-slate-300">{position}</span>
+              </p>
+              <p className="text-xs text-slate-500">
+                Action: <span className="text-slate-300">{action || "—"}</span>
+              </p>
+              <p className="text-xs text-slate-500">
+                Result: <span className="text-slate-300">{result || "—"}</span>
+              </p>
             </div>
           </div>
 

@@ -19,7 +19,9 @@ export default function SessionsPage() {
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { fetchSessions(); }, []);
+  useEffect(() => {
+    fetchSessions();
+  }, []);
 
   const fetchSessions = async () => {
     try {
@@ -34,7 +36,9 @@ export default function SessionsPage() {
 
   const createSession = async () => {
     try {
-      const response = await api.post("/sessions", { notes: notes.trim() || null });
+      const response = await api.post("/sessions", {
+        notes: notes.trim() || null,
+      });
       setSessions([response.data, ...sessions]);
       setNotes("");
     } catch (err) {
@@ -105,12 +109,18 @@ export default function SessionsPage() {
               <Plus className="w-5 h-5 text-slate-600" />
             </div>
             <p className="text-slate-400 font-medium mb-1">No sessions yet</p>
-            <p className="text-slate-600 text-sm">Create your first session to start logging hands</p>
+            <p className="text-slate-600 text-sm">
+              Create your first session to start logging hands
+            </p>
           </div>
         ) : (
           <div className="space-y-2">
             {sessions.map((session) => (
-              <SessionItem key={session.id} session={session} onDelete={deleteSession} />
+              <SessionItem
+                key={session.id}
+                session={session}
+                onDelete={deleteSession}
+              />
             ))}
           </div>
         )}

@@ -1,7 +1,12 @@
 "use client";
 
 import {
-  PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
 } from "recharts";
 
 interface ActionChartProps {
@@ -17,9 +22,9 @@ interface ActionChartProps {
 }
 
 const COLORS: Record<string, string> = {
-  fold:  "#6b7280",
+  fold: "#6b7280",
   check: "#3b82f6",
-  call:  "#d4af37",
+  call: "#d4af37",
   raise: "#10b981",
 };
 
@@ -40,7 +45,10 @@ function CustomLegend({ payload }: any) {
     <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-2">
       {payload.map((entry: any, i: number) => (
         <div key={i} className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: entry.color }}
+          />
           <span className="text-xs text-slate-400">{entry.value}</span>
         </div>
       ))}
