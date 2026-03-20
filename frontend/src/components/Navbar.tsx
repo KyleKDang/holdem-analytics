@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { LogOut, User, Spade, Menu, X, TrendingUp } from "lucide-react";
+import { LogOut, User, Menu, X, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -31,12 +31,10 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Analyzer" },
-    ...(isLoggedIn
-      ? [
-          { href: "/sessions", label: "Sessions" },
-          { href: "/analytics", label: "Dashboard" },
-        ]
-      : []),
+    ...(isLoggedIn ? [
+      { href: "/sessions", label: "Sessions" },
+      { href: "/analytics", label: "Dashboard" },
+    ] : []),
   ];
 
   return (
@@ -58,12 +56,10 @@ export default function Navbar() {
             </div>
             <span
               className="text-[15px] font-bold tracking-[0.08em] text-white uppercase"
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                letterSpacing: "0.06em",
-              }}
+              style={{ fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em" }}
             >
-              Hold&apos;Em <span className="text-[#d4af37]">Analytics</span>
+              Hold&apos;Em{" "}
+              <span className="text-[#d4af37]">Analytics</span>
             </span>
           </Link>
 
@@ -121,11 +117,7 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 text-slate-400 hover:text-white transition-colors"
           >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
 
@@ -150,13 +142,7 @@ export default function Navbar() {
               </Link>
             ))}
 
-            <div
-              className="pt-3 space-y-2"
-              style={{
-                borderTop: "1px solid rgba(255,255,255,0.06)",
-                marginTop: "12px",
-              }}
-            >
+            <div className="pt-3 space-y-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: "12px" }}>
               {isLoggedIn ? (
                 <button
                   onClick={handleLogout}

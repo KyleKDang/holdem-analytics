@@ -1,14 +1,8 @@
 "use client";
 
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, Cell,
 } from "recharts";
 
 interface PositionChartProps {
@@ -23,22 +17,18 @@ interface PositionChartProps {
 }
 
 const COLORS: Record<string, string> = {
-  early: "#a78bfa",
+  early:  "#a78bfa",
   middle: "#d4af37",
-  late: "#10b981",
+  late:   "#10b981",
 };
 
-function CustomTooltip({ active, payload, label }: any) {
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number; payload: { total_hands: number } }[]; label?: string }) {
   if (!active || !payload?.length) return null;
   const entry = payload[0].payload;
   return (
     <div className="bg-[#0e1117] border border-[#2a3040] rounded-lg px-3 py-2 shadow-xl">
-      <p className="text-[10px] text-slate-500 mb-1 capitalize">
-        {label} position
-      </p>
-      <p className="text-sm font-semibold text-white">
-        {payload[0].value.toFixed(1)}% win rate
-      </p>
+      <p className="text-[10px] text-slate-500 mb-1 capitalize">{label} position</p>
+      <p className="text-sm font-semibold text-white">{payload[0].value.toFixed(1)}% win rate</p>
       <p className="text-xs text-slate-500 mt-0.5">{entry.total_hands} hands</p>
     </div>
   );
@@ -55,16 +45,8 @@ export default function PositionChart({ data }: PositionChartProps) {
 
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <BarChart
-        data={data}
-        margin={{ top: 4, right: 4, left: -10, bottom: 4 }}
-        barSize={40}
-      >
-        <CartesianGrid
-          strokeDasharray="2 4"
-          stroke="#1e2530"
-          vertical={false}
-        />
+      <BarChart data={data} margin={{ top: 4, right: 4, left: -10, bottom: 4 }} barSize={40}>
+        <CartesianGrid strokeDasharray="2 4" stroke="#1e2530" vertical={false} />
         <XAxis
           dataKey="position"
           stroke="#2a3040"
@@ -81,17 +63,10 @@ export default function PositionChart({ data }: PositionChartProps) {
           domain={[0, 100]}
           tickFormatter={(v) => `${v}%`}
         />
-        <Tooltip
-          content={<CustomTooltip />}
-          cursor={{ fill: "rgba(255,255,255,0.03)" }}
-        />
+        <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.03)" }} />
         <Bar dataKey="win_rate" radius={[6, 6, 0, 0]}>
           {data.map((entry, i) => (
-            <Cell
-              key={i}
-              fill={COLORS[entry.position] ?? "#6b7280"}
-              opacity={0.85}
-            />
+            <Cell key={i} fill={COLORS[entry.position] ?? "#6b7280"} opacity={0.85} />
           ))}
         </Bar>
       </BarChart>
