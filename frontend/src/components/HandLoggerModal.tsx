@@ -217,14 +217,14 @@ export default function HandLoggerModal({
           </div>
 
           {/* Summary */}
-          <div className="rounded-lg bg-[#080a0d] border border-[#1e2530] p-4 space-y-1.5">
+          <div className="rounded-lg bg-[#080a0d] border border-[#1e2530] p-4">
             <p className="text-[10px] uppercase tracking-[0.1em] text-slate-500 font-semibold mb-2">Summary</p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
               <p className="text-xs text-slate-500">Hole: <span className="text-slate-300">{holeCards.join(", ") || "—"}</span></p>
               <p className="text-xs text-slate-500">Board: <span className="text-slate-300">{boardCards.join(", ") || "—"}</span></p>
               <p className="text-xs text-slate-500">Position: <span className="text-slate-300">{position}</span></p>
-              {action && <p className="text-xs text-slate-500">Action: <span className="text-slate-300">{action}</span></p>}
-              {result && <p className="text-xs text-slate-500">Result: <span className="text-slate-300">{result}</span></p>}
+              <p className="text-xs text-slate-500">Action: <span className="text-slate-300">{action || "—"}</span></p>
+              <p className="text-xs text-slate-500">Result: <span className="text-slate-300">{result || "—"}</span></p>
             </div>
           </div>
 
