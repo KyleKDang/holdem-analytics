@@ -52,15 +52,15 @@ export default function HandRow({ hand, handNumber }: HandRowProps) {
       <div className="flex items-center gap-3 flex-1">
         <div className="flex gap-1">
           {hand.hole_cards.map((card, i) => (
-            <CardDisplay key={i} code={card} size={32} />
+            <CardDisplay key={i} code={card} size={48} />
           ))}
         </div>
 
-        <div className="w-px h-6 bg-[#1e2530]" />
+        <div className="w-px h-8 bg-[#1e2530]" />
 
         <div className="flex gap-1">
           {hand.board_cards.map((card, i) => (
-            <CardDisplay key={i} code={card} size={28} />
+            <CardDisplay key={i} code={card} size={42} />
           ))}
         </div>
       </div>
