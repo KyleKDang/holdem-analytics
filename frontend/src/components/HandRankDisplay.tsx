@@ -2,18 +2,13 @@
 
 export default function HandRankDisplay({ handRank }: { handRank?: string }) {
   return (
-    <div className="text-center py-2">
-      <p className="text-[11px] uppercase tracking-[0.12em] text-slate-500 mb-1.5 font-medium">
-        Hand Rank
-      </p>
+    <div className="text-center" style={{ height: "32px" }}>
       {handRank ? (
-        <p className="text-xl font-semibold text-white tracking-wide">
+        <p className="text-xl font-semibold text-white tracking-wide leading-8">
           {handRank}
         </p>
       ) : (
-        <p className="text-base text-slate-600 tracking-wide">
-          —
-        </p>
+        <p className="text-xl text-slate-700 leading-8">—</p>
       )}
     </div>
   );

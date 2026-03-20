@@ -133,7 +133,7 @@ export default function HomePage() {
           {/* Top row: Controls + Results */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Left: Setup */}
-            <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5 space-y-5">
+            <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5 flex flex-col justify-between gap-5">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-3">
                   Opponents

@@ -45,7 +45,7 @@ function OddsCell({
   const c = colorMap[color];
 
   return (
-    <div className={`flex flex-col items-center justify-center p-4 rounded-lg border ${c.bg} ${c.border}`}>
+    <div className={`flex flex-col items-center justify-center p-4 rounded-lg border h-full ${c.bg} ${c.border}`}>
       <p className={`text-[10px] uppercase tracking-[0.12em] font-semibold mb-2 ${c.label}`}>
         {label}
       </p>
@@ -76,7 +76,7 @@ export default function OddsDisplay({
   isCalculating: boolean;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-2 w-full h-full">
       <OddsCell label="Win" value={odds?.win ?? null} isCalculating={isCalculating} color="green" />
       <OddsCell label="Tie" value={odds?.tie ?? null} isCalculating={isCalculating} color="blue" />
       <OddsCell label="Loss" value={odds?.loss ?? null} isCalculating={isCalculating} color="red" />
