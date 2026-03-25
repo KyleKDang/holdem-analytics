@@ -34,12 +34,7 @@ export default function Card({ code, size = 60, id }: CardProps) {
         alt={code}
         width={200}
         height={300}
-        style={{
-          width: `${size}px`,
-          height: "auto",
-          maxHeight: `${size * 1.5}px`,
-          display: "block",
-        }}
+        style={{ width: `${size}px`, height: "auto", maxHeight: `${size * 1.5}px`, display: "block" }}
         className="pointer-events-none select-none object-contain rounded-[3px]"
         draggable={false}
       />
