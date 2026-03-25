@@ -6,22 +6,17 @@ import Card from "./Card";
 interface DroppableAreaProps {
   id: string;
   cards: string[];
+  cardSize: number;
 }
 
 const SLOT_CONFIG = {
-  hole:  { slots: 2, cardSize: 58 },
-  board: { slots: 5, cardSize: 58 },
+  hole:  { slots: 2 },
+  board: { slots: 5 },
 };
 
-export default function DroppableArea({ id, cards }: DroppableAreaProps) {
+export default function DroppableArea({ id, cards, cardSize }: DroppableAreaProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
-  const config = SLOT_CONFIG[id as keyof typeof SLOT_CONFIG] ?? { slots: 5, cardSize: 58 };
-
-  // Pick size based on screen width — only runs client-side
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-  const cardSize = isMobile
-    ? Math.floor((window.innerWidth - 64) / config.slots)
-    : config.cardSize;
+  const config = SLOT_CONFIG[id as keyof typeof SLOT_CONFIG] ?? { slots: 5 };
   const slotHeight = Math.floor(cardSize * 1.55);
 
   return (

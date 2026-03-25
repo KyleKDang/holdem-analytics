@@ -5,9 +5,10 @@ import Card from "./Card";
 
 interface DeckProps {
   deck: string[];
+  cardSize: number;
 }
 
-export default function Deck({ deck }: DeckProps) {
+export default function Deck({ deck, cardSize }: DeckProps) {
   const { setNodeRef, isOver } = useDroppable({ id: "deck" });
 
   return (
@@ -21,13 +22,13 @@ export default function Deck({ deck }: DeckProps) {
         style={{
           scrollbarWidth: "thin",
           scrollbarColor: "#2a2f3a #080a0d",
-          height: "130px",
+          height: `${Math.floor(cardSize * 1.55) + 24}px`,
           alignItems: "center",
         }}
       >
         {deck.map((c) => (
           <div key={c} className="flex-shrink-0">
-            <Card code={c} id={c} size={58} />
+            <Card code={c} id={c} size={cardSize} />
           </div>
         ))}
       </div>

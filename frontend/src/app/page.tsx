@@ -19,6 +19,9 @@ type Odds = { win: number; tie: number; loss: number };
 const suits = ["S", "H", "D", "C"];
 const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
 
+const DESKTOP_CARD_SIZE = 58;
+const MOBILE_CARD_SIZE = 52;
+
 export default function HomePage() {
   const [deck, setDeck] = useState<string[]>([]);
   const [holeCards, setHoleCards] = useState<string[]>([]);
@@ -32,6 +35,7 @@ export default function HomePage() {
   const [showDisabledMessage, setShowDisabledMessage] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -41,7 +45,13 @@ export default function HomePage() {
   useEffect(() => {
     setDeck(suits.flatMap((s) => ranks.map((r) => r + s)));
     setIsLoggedIn(!!localStorage.getItem("token"));
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
+
+  const cardSize = isMobile ? MOBILE_CARD_SIZE : DESKTOP_CARD_SIZE;
 
   const sortDeck = (deck: string[]) =>
     deck.sort((a, b) => {
@@ -130,9 +140,7 @@ export default function HomePage() {
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="min-h-[calc(100vh-65px)] p-4 sm:p-6 bg-[#080a0d]">
         <div className="max-w-7xl mx-auto space-y-4">
-          {/* Top row: Controls + Results */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Left: Setup — order-2 on mobile so droppables sit below results */}
             <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5 flex flex-col justify-between gap-5 order-2 lg:order-1">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-3">
@@ -157,18 +165,17 @@ export default function HomePage() {
                 <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-2">
                   Hole Cards
                 </p>
-                <DroppableArea id="hole" cards={holeCards} />
+                <DroppableArea id="hole" cards={holeCards} cardSize={cardSize} />
               </div>
 
               <div>
                 <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-2">
                   Board Cards
                 </p>
-                <DroppableArea id="board" cards={boardCards} />
+                <DroppableArea id="board" cards={boardCards} cardSize={cardSize} />
               </div>
             </div>
 
-            {/* Right: Results + Actions — order-1 on mobile so it appears first */}
             <div className="flex flex-col gap-4 order-1 lg:order-2">
               <ResultsPanel handRank={handRank} odds={odds} isCalculating={isCalculating} />
 
@@ -196,17 +203,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Deck */}
           <div className="rounded-xl bg-[#0e1117] border border-[#1e2530] p-5">
             <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-3">
               Deck — drag cards to set up your hand
             </p>
-            <Deck deck={deck} />
+            <Deck deck={deck} cardSize={cardSize} />
           </div>
         </div>
       </div>
 
-      {/* Toasts */}
       {showDisabledMessage && (
         <div className="fixed bottom-6 right-6 left-6 sm:left-auto sm:w-auto bg-[#0e1117] border border-[#d4af37]/30 text-[#d4af37] px-5 py-3 rounded-xl shadow-xl z-50 text-sm font-medium">
           {getLogHandTooltip()}
@@ -228,7 +233,7 @@ export default function HomePage() {
       {typeof window !== "undefined" &&
         createPortal(
           <DragOverlay>
-            {activeCard ? <Card code={activeCard} id={`overlay-${activeCard}`} size={72} /> : null}
+            {activeCard ? <Card code={activeCard} id={`overlay-${activeCard}`} size={cardSize} /> : null}
           </DragOverlay>,
           document.body,
         )}
