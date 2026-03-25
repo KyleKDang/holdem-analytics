@@ -9,13 +9,20 @@ interface DroppableAreaProps {
 }
 
 const SLOT_CONFIG = {
-  hole:  { slots: 2, cardSize: 58, mobileCardSize: 44 },
-  board: { slots: 5, cardSize: 58, mobileCardSize: 44 },
+  hole:  { slots: 2, cardSize: 58 },
+  board: { slots: 5, cardSize: 58 },
 };
 
 export default function DroppableArea({ id, cards }: DroppableAreaProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
-  const config = SLOT_CONFIG[id as keyof typeof SLOT_CONFIG] ?? { slots: 5, cardSize: 58, mobileCardSize: 44 };
+  const config = SLOT_CONFIG[id as keyof typeof SLOT_CONFIG] ?? { slots: 5, cardSize: 58 };
+
+  // Pick size based on screen width — only runs client-side
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+  const cardSize = isMobile
+    ? Math.floor((window.innerWidth - 48) / config.slots) // 48px accounts for padding + gaps
+    : config.cardSize;
+  const slotHeight = Math.floor(cardSize * 1.55);
 
   return (
     <div
@@ -25,32 +32,23 @@ export default function DroppableArea({ id, cards }: DroppableAreaProps) {
           ? "border-[#d4af37]/60 bg-[#d4af37]/5"
           : "border-[#1e2530] bg-[#080a0d]"
       }`}
-      style={{ height: "118px" }}
+      style={{ height: `${slotHeight + 28}px` }}
     >
       {Array.from({ length: config.slots }).map((_, i) => {
         const card = cards[i];
         return (
-          <div key={i} className="flex items-center justify-center flex-shrink-0">
+          <div
+            key={i}
+            className="flex items-center justify-center flex-shrink-0"
+            style={{ width: `${cardSize}px`, height: `${slotHeight}px` }}
+          >
             {card ? (
-              <>
-                <span className="sm:hidden">
-                  <Card code={card} id={card} size={config.mobileCardSize} />
-                </span>
-                <span className="hidden sm:block">
-                  <Card code={card} id={card} size={config.cardSize} />
-                </span>
-              </>
+              <Card code={card} id={card} size={cardSize} />
             ) : (
-              <>
-                <div
-                  className="sm:hidden rounded border border-dashed border-[#1e2530]"
-                  style={{ width: `${config.mobileCardSize}px`, height: "62px" }}
-                />
-                <div
-                  className="hidden sm:block rounded border border-dashed border-[#1e2530]"
-                  style={{ width: `${config.cardSize}px`, height: "90px" }}
-                />
-              </>
+              <div
+                className="rounded border border-dashed border-[#1e2530]"
+                style={{ width: `${cardSize}px`, height: `${slotHeight}px` }}
+              />
             )}
           </div>
         );
