@@ -20,7 +20,7 @@ export default function DroppableArea({ id, cards }: DroppableAreaProps) {
   // Pick size based on screen width — only runs client-side
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
   const cardSize = isMobile
-    ? Math.floor((window.innerWidth - 56) / config.slots)
+    ? Math.floor((window.innerWidth - 64) / config.slots)
     : config.cardSize;
   const slotHeight = Math.floor(cardSize * 1.55);
 
