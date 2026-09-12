@@ -27,7 +27,6 @@ Compute-heavy odds simulation runs in a dedicated Go service so the Python API s
 - [Testing](#testing)
 - [Deployment](#deployment)
 - [Project Structure](#project-structure)
-- [Roadmap](#roadmap)
 - [License](#license)
 
 ---
@@ -393,8 +392,6 @@ npm run build                      # production build
 The 24 backend tests cover the hand-evaluation core: every one of the ten hand categories at both five and seven cards, ace-low straight handling, and probabilistic sanity checks on the odds calculator.
 They require no database or running service, since they exercise pure functions directly.
 
-Extending coverage to the API and analytics layers is on the [roadmap](#roadmap).
-
 ---
 
 ## Deployment
@@ -460,17 +457,6 @@ holdem-analytics/
 ├── docker-compose.yml
 └── README.md
 ```
-
----
-
-## Roadmap
-
-- **CI pipeline.** Run the backend test suite, formatter, type check and linter on every push. The frontend build is currently gated by Amplify; the backend has no automated gate.
-- **Broaden test coverage** from the hand-evaluation core to the route layer, the analytics service and the Go integration.
-- **TLS on the API origin** so the backend can be addressed directly rather than only through the frontend rewrite, and so the docs link is served over HTTPS.
-- **SQL-side analytics aggregation.** Metrics are currently derived in Python per request, which re-reads a user's hands once per metric. Pushing the aggregation into SQL, and paginating the timeline series, is the change that matters as hand volume grows.
-- **Session lifecycle.** `session.end_time` exists in the schema but is never written; closing sessions would enable duration-aware statistics and date-range filtering on the dashboard.
-- **Structured logging and error tracking**, currently absent.
 
 ---
 
