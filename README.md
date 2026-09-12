@@ -209,7 +209,7 @@ Both implementations, benchmarked on the same machine:
 | 9 | 2,700 ms | 806 ms | **3.3x** |
 
 **Benchmark conditions:** MacBook Air (M-series, 8 cores), 10,000 simulations, 4 workers, averaged over 5 trials, both implementations measured on the same hardware.
-These figures compare the two implementations, not the deployed system: production runs on a smaller EC2 instance, so absolute latency there is higher while the ratio holds.
+These figures compare the two implementations, not the deployed system: production runs on a `t3.micro`, which has two burstable vCPUs against the eight used for the benchmark, so absolute latency there is higher while the ratio holds.
 
 Full benchmark breakdowns, including scaling by simulation count, worker count and board stage, are in the [odds engine repository](https://github.com/KyleKDang/poker-odds-engine#performance).
 
@@ -402,9 +402,9 @@ Extending coverage to the API and analytics layers is on the [roadmap](#roadmap)
 | Component | Platform | Notes |
 | --- | --- | --- |
 | Frontend | AWS Amplify | Deploys automatically on push to `main`; CDN distribution and managed TLS certificate. The build runs ESLint and type checking, so a lint or type error fails the deploy. |
-| API | AWS EC2 | Dockerized FastAPI behind Uvicorn on port 8000 |
-| Odds engine | AWS EC2 | Dockerized Go service on the same instance, reached over loopback at port 8001 |
-| Database | AWS RDS | Managed PostgreSQL with automated backups |
+| API | AWS EC2 (`t3.micro`) | Dockerized FastAPI behind Uvicorn on port 8000 |
+| Odds engine | AWS EC2 (`t3.micro`) | Dockerized Go service on the same instance, reached over loopback at port 8001 |
+| Database | AWS RDS (`db.t3.micro`) | Managed PostgreSQL with automated backups |
 
 Custom domain with a managed TLS certificate on the frontend.
 The API and the odds engine communicate over loopback on the shared instance, so that hop does not cross the network.
