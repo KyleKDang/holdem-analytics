@@ -120,7 +120,8 @@ Visualized with Recharts as a line chart for the win-rate trend, bar charts for 
              ↓
 ┌──────────────────────────┐
 │      Database Layer      │
-│   PostgreSQL (AWS RDS)   │
+│  PostgreSQL 17 / Docker  │
+│   (same EC2 instance)    │
 │                          │
 │  • user                  │
 │  • session               │
@@ -188,7 +189,7 @@ Maintained as a separate service in **[poker-odds-engine](https://github.com/Kyl
 
 ### Infrastructure
 
-PostgreSQL 16, Docker and Docker Compose, AWS Amplify, AWS EC2, AWS RDS.
+PostgreSQL 17, Docker and Docker Compose, AWS Amplify, AWS EC2.
 
 ---
 
@@ -220,7 +221,7 @@ The Python implementation is retained in the codebase at `backend/app/core/` as 
 
 ### Prerequisites
 
-- Docker and Docker Compose, or: Python 3.11+ with [Poetry](https://python-poetry.org/), Node.js 18+, and PostgreSQL 16
+- Docker and Docker Compose, or: Python 3.11+ with [Poetry](https://python-poetry.org/), Node.js 18+, and PostgreSQL 17
 - The Go odds engine, cloned separately (see below)
 
 ### 1. Clone both repositories
@@ -400,11 +401,12 @@ They require no database or running service, since they exercise pure functions 
 | --- | --- | --- |
 | Frontend | AWS Amplify | Deploys automatically on push to `main`; CDN distribution and managed TLS certificate. The build runs ESLint and type checking, so a lint or type error fails the deploy. |
 | API | AWS EC2 (`t3.micro`) | Dockerized FastAPI behind Uvicorn on port 8000 |
-| Odds engine | AWS EC2 (`t3.micro`) | Dockerized Go service on the same instance, reached over loopback at port 8001 |
-| Database | AWS RDS (`db.t3.micro`) | Managed PostgreSQL with automated backups |
+| Odds engine | AWS EC2 (`t3.micro`) | Dockerized Go service on the same instance, reached by container name on port 8001 |
+| Database | AWS EC2 (`t3.micro`) | Dockerized PostgreSQL 17 on the same instance, data on a named Docker volume; nightly `pg_dump` via cron with seven days of retention |
 
 Custom domain with a managed TLS certificate on the frontend.
-The API and the odds engine communicate over loopback on the shared instance, so that hop does not cross the network.
+The API, the odds engine and the database share a user-defined Docker network on the instance, so those hops never leave the machine.
+The database container publishes no port, so it is reachable only from containers on that network, never from the internet.
 
 `/health` returns application status alongside a live database connectivity check, and is the endpoint to poll when verifying a deploy.
 
